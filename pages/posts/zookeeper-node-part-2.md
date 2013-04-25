@@ -11,22 +11,22 @@ then just write your client code. Here's the usage example taken from the github
 
 ````js
 var assert = require('assert')
-    , zkplus = require('zkplus')
+  , zkplus = require('zkplus')
 
 var client = zkplus.createClient({
-    servers: [{
-        host: 'localhost'
-        , port: 2181
-    }]
+  servers: [{
+    host: 'localhost'
+    , port: 2181
+  }]
 });
 
 client.on('connect', function () {
-    client.mkdirp('/foo/bar', function (err) {
-        assert.ifError(err);
-        client.rmr('/foo', function (err) {
-            assert.ifError(err);
-            client.close();
-        });
+  client.mkdirp('/foo/bar', function (err) {
+    assert.ifError(err);
+    client.rmr('/foo', function (err) {
+      assert.ifError(err);
+      client.close();
     });
+  });
 });
 ````

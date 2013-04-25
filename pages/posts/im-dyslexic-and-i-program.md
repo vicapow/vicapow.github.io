@@ -3,9 +3,8 @@ November 18, 2012
 
 I'm dyslexic. And no, that doesn't mean I read backwards. It also doesn't mean I'm stupid. From wikipedia:
 
-_"Dyslexia is a brain-based type of learning disability that specifically impairs a person's ability to read. These individuals typically read at levels significantly lower than expected despite having normal intelligence."_
+_"Dyslexia is a brain-based type of learning disability that specifically impairs a person's ability to read. These individuals typically read at levels significantly lower than expected despite having normal intelligence." - National Institute of Neurological Disorders and Stroke_
 
-National Institute of Neurological Disorders and Stroke
 But in middle school, my teachers all just about gave up on me ever being able to read, write or spell at a proficient level and so did I. They gave me a laptop that came with software that would translate text in speech and the audio versions of my reading assignments and sent me on my way. And so, for the longest time, I believed I would never need to read or write. What was the point? Technology could already do this task for me. So I almost never read or wrote anything. Nor did I want to. It was hard and frustrating and everyone could do it better then me.
 
 With the computer I was given, I learned to type. And better and more quickly then any of my peers. Typing, it turns out, was a great way to learn how to spell. I could memorize the motion of my fingers instead of trying to remember the order of letters.
