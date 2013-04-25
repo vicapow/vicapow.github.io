@@ -1,0 +1,100 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><title> a blog by victor powell</title><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/bootstrap-responsive.min.css"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700"></head><body><div class="container"><div class="row-fluid"><div class="span12"><h2>a blog by <a href="http://vctr.me">victor powell (vicapow)</a></h2></div></div><h3><a href="/posts/fibonacci-in-rust.html">Fibonacci In Rust</a></h3>
+<p>April 14, 2013</p>
+<pre><code class="lang-rust">// (the slow, recursive way)
+
+fn fib(x :int) -&gt; int {
+  match x {
+    0 =&gt; 0
+    , 1 =&gt; 1
+    , _ =&gt; fib(x-1) + fib(x-2)
+  }
+}
+
+fn main() {
+  let mut n = 0;
+  while n &lt; 40 {
+    io::println(fmt!(&quot;fib %?: %?&quot;, n, fib(n)));
+    n += 1;
+  }
+}</code></pre>
+<h3><a href="/posts/what-do-i-want.html">What Do I Want?</a></h3>
+<p>January 02, 2013</p>
+<p>A while ago I was asked the question &quot;what do you want?&quot; it took me back. It wasn&#39;t something I really thought of much. So I took the time to write a few things down and a few days ago I came across that text file. here it is bellow:</p>
+<ul>
+<li><p>I want to be in control of what I decide to work on.</p>
+</li>
+<li><p>I want to be take pride in the quality of the things I make.</p>
+</li>
+<li><p>I want to make things people not only use, but fall in love with.</p>
+</li>
+<li><p>I want there to be a direct correlation between the quality of work my and how much money I make.</p>
+</li>
+</ul>
+<p>glad to see my opinions haven&#39;t changed :)</p>
+<h3><a href="/posts/thoughts-on-the-movie-12-monkeys.html">Thoughts On The Movie &#39;12 Monkeys&#39;</a></h3>
+<p>December 12, 2012</p>
+<p>I know I&#39;m a little late to the party but I just watched the movie 12 Monkeys and was so blown away, I was inspired enough to write down some of my thoughts. There was one scene in particular I couldn&#39;t wrap my head around; the final scene, when the woman scientist (astrophysicist) is seen on the plane next to the bio terrorist, she mentions she&#39;s &quot;in insurance.&quot;</p>
+<p>My first thought was that it was simply a coincidence. That she unknowingly sat next to the bio terrorist in the past. But she wasn&#39;t as young as she should have been as suggested in the age difference between young and old Cole. This small scene changes completely my original interpretation of the film because up until that point, it seemed Cole was very much unable to effect his past and that he was always destined to witness his own death. </p>
+<p>After some Googling, it turns out I wasn&#39;t the only one perplexed by this scene. One theory was that the past in the movie was in fact, changeable and the scientist on the plane was there to &quot;ensure&quot; the bio terrorist went through with his plain in light of Coles actions. I remained in disbelieve of this opinion until the commenter posted a link to the original script which describes Jose&#39;s reaction to hearing the details of the bio terrorist and what plane he&#39;s flying out of. The script reads specifically, &quot;JOSE, having heard this, steps back into the crowd as RAILLY grabs COLE and pulls him toward the Security Check Points.&quot; This means Jose was after that information from for the scientists so they could make sure he made it onto the plane! The scientists had no intent on changing the past and that the past, was actually changeable.</p>
+<p>Another scene in the movie that supports this theory is that in an early flashback to Cole&#39;s memory of the incident at the airport, Cole sees Jeffrey as the man with the ponytail and suitcase running for the gate, implying that Jeffrey may have been the original terrorist until the past was altered.</p>
+<h3><a href="/posts/the-appreciability-of-code-as-art.html">The <em>Appreciability</em> Of Code As Art</a></h3>
+<p>December 02, 2012</p>
+<p>Code is art. If you google &quot;what is art?&quot; you get the following response</p>
+<p><em>&quot;The expression or application of human creative skill and imagination&quot;</em></p>
+<p>By this definition, code should rightfully be considered art but few self described artists give it this rightful designation. I thing this has to do with what I call codes lake of  &quot;appreciability.&quot; Take music as an example. It&#39;s fairly easy to argue that any one of Beethoven&#39;s works can be considered art. This is because it&#39;s easy for almost everyone (at some level) to appreciate music. You need no formal education to enjoy it. (Although, I&#39;m sure having a deeper understanding of music helps you to better appreciate the level of detail and mastery expressed in his work.) So with music, everyones born with the ability to appreciate it, only a few go on to master it. Programming is different, in that to appreciate it, you have to have mastered it (or at least be proficient at it.)</p>
+<h3><a href="/posts/im-dyslexic-and-i-program.html">I&#39;m Dyslexic And I Program</a></h3>
+<p>November 18, 2012</p>
+<p>I&#39;m dyslexic. And no, that doesn&#39;t mean I read backwards. It also doesn&#39;t mean I&#39;m stupid. From wikipedia:</p>
+<p><em>&quot;Dyslexia is a brain-based type of learning disability that specifically impairs a person&#39;s ability to read. These individuals typically read at levels significantly lower than expected despite having normal intelligence.&quot;</em></p>
+<p>National Institute of Neurological Disorders and Stroke
+But in middle school, my teachers all just about gave up on me ever being able to read, write or spell at a proficient level and so did I. They gave me a laptop that came with software that would translate text in speech and the audio versions of my reading assignments and sent me on my way. And so, for the longest time, I believed I would never need to read or write. What was the point? Technology could already do this task for me. So I almost never read or wrote anything. Nor did I want to. It was hard and frustrating and everyone could do it better then me.</p>
+<p>With the computer I was given, I learned to type. And better and more quickly then any of my peers. Typing, it turns out, was a great way to learn how to spell. I could memorize the motion of my fingers instead of trying to remember the order of letters.</p>
+<p>Then, another interesting thing began to happen. I learned to program. In art class, we used Adobe Flash to create animations. I found myself wanting to create interactions and more complicated motions, so I learned ActionScript. As long as I could find tutorials with several examples, and relatively little text between them, I could get my animations to do what I wanted. And so by accident, I found an entire would inside of ActionScript for doing all kinds of neat things. I could even make video games!</p>
+<p>Because of all the time I was spending trying to follow tutorials, my ability to read slowly improved. After I got to college and decided to major in Computer Engineer, a really great thing happened. Someone suggested a book for me to read. The book was called Outliers. It was the fastest I&#39;ve ever read a book and probably the first book I ever read that I truly  enjoyed reading. So I read Blink and The Tipping Point just as quickly after that. Somehow reading wasn&#39;t a struggle while reading those books. It was like riding a current down stream, instead of feeling like a fight upstream. I reached some sort of critical mass, where the enjoyment factor outweighed the choir.</p>
+<p>There&#39;s a lot of research in the area in neuroplasticity that suggests increasing remedial reading can offset the effects of dyslexia. Let me say that another way, reading more makes you less of a dyslexic. The prevailing wisdom on dyslexia up until recently has basically been if you got it your stuck with it. Which makes sense, since the one thing dyslexics don&#39;t want to do its read more so they never improve.</p>
+<p>It seems more and more that reading and writing is like the internet itself and being better at both is analoges to improving your download and upload bandwidth. I feel very strongly that reading and writing on the web isn&#39;t just a fad. It&#39;s going to be the primary communication protocol for us humans on the internet for a very long time to come. It should be our priority, as a society, to teach the fundamentals of communication above all else in school. As long as kids are able to communicate, they&#39;ll gravitate toward their interests and fields of choice on their own teaching themselves along the way.</p>
+<h3><a href="/posts/zookeeper-node-part-2.html">Zookeeper with node.JS on OS X - Part 2: Setting up the Node.JS Client</a></h3>
+<p>July 16, 2012</p>
+<p>At first I thought node-zookeeper was the best module out there for working with zk and node but the API is gross. I was glad to find out I wasn&#39;t alone. <a href="https://github.com/mcavage">Mark Cavage</a> from Joyent was kind enough to write a wrapper around it that makes it feel more like the native node file system api. You can find it here: <a href="https://github.com/mcavage/node-zkplus">https://github.com/mcavage/node-zkplus</a> or just install it via npm.</p>
+<pre><code>  npm install zkplus</code></pre>
+<p>then just write your client code. Here&#39;s the usage example taken from the github project:</p>
+<pre><code class="lang-js">var assert = require(&#39;assert&#39;)
+    , zkplus = require(&#39;zkplus&#39;)
+
+var client = zkplus.createClient({
+    servers: [{
+        host: &#39;localhost&#39;
+        , port: 2181
+    }]
+});
+
+client.on(&#39;connect&#39;, function () {
+    client.mkdirp(&#39;/foo/bar&#39;, function (err) {
+        assert.ifError(err);
+        client.rmr(&#39;/foo&#39;, function (err) {
+            assert.ifError(err);
+            client.close();
+        });
+    });
+});</code></pre>
+<h3><a href="/posts/zookeeper-node-part-1.html">Zookeeper with node.JS on OS X - Part 1: Installing Zookeeper</a></h3>
+<p>July 16, 2012</p>
+<p>To get started, you&#39;ll need to install zookeeper. I&#39;ll assume you&#39;re using OS X. In which case, you can install zookeeper via home brew.</p>
+<pre><code>brew install zookeeper</code></pre>
+<p>if that breaks because of a permissions issue mentioning this directory:</p>
+<pre><code>/usr/local/var/run/zookeeper</code></pre>
+<p>just go ahead and create that folder using sudo:</p>
+<pre><code>sudo mkdir /usr/local/var/run/zookeeper</code></pre>
+<p>after that, make sure to change the owner to the current user</p>
+<pre><code>sudo chown victor:victor /usr/local/var/run/zookeeper</code></pre>
+<p>Now just try running <code>brew install zookeeper</code> again. zookeeper should now be installed in:</p>
+<pre><code>/usr/local/Cellar/zookeeper/</code></pre>
+<p>You&#39;ll also want to setup the zookeeper configuration file in</p>
+<pre><code>/usr/local/etc/zookeeper/zoo.cfg</code></pre>
+<p>I was able to just copy the example cfg to zoo.cfg from within that directory. tl:dr, your cfg file should look like this: <a href="https://gist.github.com/3126340">https://gist.github.com/3126340</a></p>
+<p>To clean up all this mess, I also added a small shell script that I put in <code>/usr/local/bin</code> that looks like this <a href="https://gist.github.com/3126356">https://gist.github.com/3126356</a>. make sure to also set the file mode to executable using <code>chmod +x zookeeper</code> so that zookeeper will find our cfg file and use the proper directory to store its data. this will also let us do:</p>
+<pre><code>zookeeper start</code></pre>
+<p>to start the server or</p>
+<pre><code>zookeeper stop</code></pre>
+<p>to stop it. yay!!</p>
+</div><script src="/js/main.js"></script></body></html>

@@ -1,0 +1,34 @@
+/*.prettyprint {background:#141414;color:#f8f8f8;}
+.prettyprint span.str,pre.prettyprint span.atv{color:#8f9d6a;}
+.prettyprint span.kwd,pre.prettyprint span.pun{color:#cda869;}
+.prettyprint span.com{color:#5f5a60;font-style:italic;}
+.prettyprint span.typ{color:#9b703f;}
+.prettyprint span.lit{color:#cf6a4c;}
+.prettyprint span.pln{color:#7587a6;}
+.prettyprint span.tag{color:#ac885b;}
+.prettyprint span.atn{color:#e0c589;}
+.prettyprint span.dec{color:#494949;}
+
+pre {
+  background-color: #141414;
+}*/
+
+body{
+  font-family: 'Droid Sans', sans-serif;
+  font-size: 18px;
+  line-height: 29px;
+}
+
+p{
+  margin-bottom: 30px;
+}
+
+.post-body img{
+  float: right;
+}
+.post-body{
+  clear: both;
+}
+.clear{
+  clear: both;
+}

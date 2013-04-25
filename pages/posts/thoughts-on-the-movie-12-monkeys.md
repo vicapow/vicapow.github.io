@@ -1,0 +1,10 @@
+### [Thoughts On The Movie '12 Monkeys'](/posts/thoughts-on-the-movie-12-monkeys.html)
+December 12, 2012
+
+I know I'm a little late to the party but I just watched the movie 12 Monkeys and was so blown away, I was inspired enough to write down some of my thoughts. There was one scene in particular I couldn't wrap my head around; the final scene, when the woman scientist (astrophysicist) is seen on the plane next to the bio terrorist, she mentions she's "in insurance."
+
+My first thought was that it was simply a coincidence. That she unknowingly sat next to the bio terrorist in the past. But she wasn't as young as she should have been as suggested in the age difference between young and old Cole. This small scene changes completely my original interpretation of the film because up until that point, it seemed Cole was very much unable to effect his past and that he was always destined to witness his own death. 
+
+After some Googling, it turns out I wasn't the only one perplexed by this scene. One theory was that the past in the movie was in fact, changeable and the scientist on the plane was there to "ensure" the bio terrorist went through with his plain in light of Coles actions. I remained in disbelieve of this opinion until the commenter posted a link to the original script which describes Jose's reaction to hearing the details of the bio terrorist and what plane he's flying out of. The script reads specifically, "JOSE, having heard this, steps back into the crowd as RAILLY grabs COLE and pulls him toward the Security Check Points." This means Jose was after that information from for the scientists so they could make sure he made it onto the plane! The scientists had no intent on changing the past and that the past, was actually changeable.
+
+Another scene in the movie that supports this theory is that in an early flashback to Cole's memory of the incident at the airport, Cole sees Jeffrey as the man with the ponytail and suitcase running for the gate, implying that Jeffrey may have been the original terrorist until the past was altered.

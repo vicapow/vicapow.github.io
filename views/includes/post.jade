@@ -1,0 +1,15 @@
+extends layout
+
+block title
+  | a blog by victor powell
+
+block body
+  .container
+    br
+    a(href="/") back
+    .post-body
+      block post-body
+      .clear
+    br
+    include ../includes/disqus
+    a(href="/") back

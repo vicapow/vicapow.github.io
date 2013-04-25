@@ -1,0 +1,32 @@
+<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><title> a blog by victor powell</title><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/bootstrap-responsive.min.css"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700"></head><body><div class="container"><br><a href="/">back</a><div class="post-body"><h3><a href="/posts/zookeeper-node-part-2.html">Zookeeper with node.JS on OS X - Part 2: Setting up the Node.JS Client</a></h3>
+<p>July 16, 2012</p>
+<p>At first I thought node-zookeeper was the best module out there for working with zk and node but the API is gross. I was glad to find out I wasn&#39;t alone. <a href="https://github.com/mcavage">Mark Cavage</a> from Joyent was kind enough to write a wrapper around it that makes it feel more like the native node file system api. You can find it here: <a href="https://github.com/mcavage/node-zkplus">https://github.com/mcavage/node-zkplus</a> or just install it via npm.</p>
+<pre><code>  npm install zkplus</code></pre>
+<p>then just write your client code. Here&#39;s the usage example taken from the github project:</p>
+<pre><code class="lang-js">var assert = require(&#39;assert&#39;)
+    , zkplus = require(&#39;zkplus&#39;)
+
+var client = zkplus.createClient({
+    servers: [{
+        host: &#39;localhost&#39;
+        , port: 2181
+    }]
+});
+
+client.on(&#39;connect&#39;, function () {
+    client.mkdirp(&#39;/foo/bar&#39;, function (err) {
+        assert.ifError(err);
+        client.rmr(&#39;/foo&#39;, function (err) {
+            assert.ifError(err);
+            client.close();
+        });
+    });
+});</code></pre>
+<div class="clear"></div></div><br><div id="disqus_thread"></div><script type="text/javascript">/* CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE */
+var disqus_shortname = 'vicapow'; // required: replace example with your forum shortname
+/* DON'T EDIT BELOW THIS LINE */
+(function() {
+  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><noscript>Please enable JavaScript to view the comments</noscript><a href="/">back</a></div><script src="/js/main.js"></script></body></html>
