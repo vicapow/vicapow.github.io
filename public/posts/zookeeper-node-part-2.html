@@ -4,23 +4,23 @@
 <pre><code>  npm install zkplus</code></pre>
 <p>then just write your client code. Here&#39;s the usage example taken from the github project:</p>
 <pre><code class="lang-js">var assert = require(&#39;assert&#39;)
-    , zkplus = require(&#39;zkplus&#39;)
+  , zkplus = require(&#39;zkplus&#39;)
 
 var client = zkplus.createClient({
-    servers: [{
-        host: &#39;localhost&#39;
-        , port: 2181
-    }]
+  servers: [{
+    host: &#39;localhost&#39;
+    , port: 2181
+  }]
 });
 
 client.on(&#39;connect&#39;, function () {
-    client.mkdirp(&#39;/foo/bar&#39;, function (err) {
-        assert.ifError(err);
-        client.rmr(&#39;/foo&#39;, function (err) {
-            assert.ifError(err);
-            client.close();
-        });
+  client.mkdirp(&#39;/foo/bar&#39;, function (err) {
+    assert.ifError(err);
+    client.rmr(&#39;/foo&#39;, function (err) {
+      assert.ifError(err);
+      client.close();
     });
+  });
 });</code></pre>
 <div class="clear"></div></div><br><div id="disqus_thread"></div><script type="text/javascript">/* CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE */
 var disqus_shortname = 'vicapow'; // required: replace example with your forum shortname

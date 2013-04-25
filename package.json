@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "node-supervisor --extensions 'node|js|jade|md|markdown' --no-restart-on exit ./node_modules/strange-case",
-    "compile" : "./node_modules/strange-case"
+    "compile" : "node node_modules/strange-case"
   },
   "repository": {
     "type": "git",
