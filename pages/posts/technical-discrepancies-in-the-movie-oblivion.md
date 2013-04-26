@@ -1,10 +1,10 @@
-### [Technical discrepancies in the movie oblivion (Spoiler alert)](/posts/technical-discrepancies-in-the-movie-oblivion.html)
+### [Technical Discrepancies In The Movie Oblivion (Spoiler Alert)](/posts/technical-discrepancies-in-the-movie-oblivion.html)
 
 1. Why were the clones soulless when they first invaded the planet but not while working as drone repair people?
 
-* Why would a massive computer be so stupid as to contain its entire self within a floating cube the size of a house? Wouldn't it be safer to distribute itself among several components in as wide an array as possible?
-
 * Why didn't the robot grab more human samples when it first invaded? Why just stick to two?
+
+* Why would a massive computer be so stupid as to contain its entire self within a floating cube the size of a house? Wouldn't it be safer to distribute itself among several components in as wide an array as possible?
 
 * What the fuck does a robot want with water? Seems like a sun would be a much more convent source of energy. Or wouldn't a robot that's smart enough to clone people also be smart and powerful enough to create a fusion reactor?
 
