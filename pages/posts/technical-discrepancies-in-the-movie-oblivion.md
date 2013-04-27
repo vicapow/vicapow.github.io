@@ -1,4 +1,5 @@
 ### [Technical Discrepancies In The Movie Oblivion (Spoiler Alert)](/posts/technical-discrepancies-in-the-movie-oblivion.html)
+April 27, 2013
 
 1. Why were the clones soulless when they first invaded the planet but not while working as drone repair people?
 
@@ -16,10 +17,10 @@
 
 * How did the first repair ship stop running after it entered the radiation zone but the second ship entered the previous zone without any problems?
 
-* what happens when the other 50-100 robot repair men find out Julia is alive and living with clone 52? Is she going to have that many husbands? They all loved her equally as much as the original.
+* What happens when the other 50-100 robot repair men find out Julia is alive and living with clone 52? Is she going to have that many husbands? They all loved her equally as much as the original.
 
-* why didn't clone 52 try to help Julia after he untied himself?
+* Why didn't clone 52 try to help Julia after he untied himself?
 
-* how did clone 52 make it out of the dessert and why didn't he try to take Julia?
+* How did clone 52 make it out of the dessert and why didn't he try to take Julia?
 
-* why didn't the repair ship have a black box recording all of Jack's activity?
+* Why didn't the repair ship have a black box recording all of Jack's activity?
