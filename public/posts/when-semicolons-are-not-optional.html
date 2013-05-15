@@ -10,30 +10,29 @@
   </head>
   <body>
     <div class="container"><br><a href="/">back</a>
-      <div class="post-body"><h3><a href="/posts/zookeeper-node-part-2.html">Zookeeper with node.JS on OS X - Part 2: Setting up the Node.JS Client</a></h3>
-<p>July 16, 2012</p>
-<p>At first I thought node-zookeeper was the best module out there for working with zk and node but the API is gross. I was glad to find out I wasn&#39;t alone. <a href="https://github.com/mcavage">Mark Cavage</a> from Joyent was kind enough to write a wrapper around it that makes it feel more like the native node file system api. You can find it here: <a href="https://github.com/mcavage/node-zkplus">https://github.com/mcavage/node-zkplus</a> or just install it via npm.</p>
-<pre><code>  npm install zkplus</code></pre>
-<p>then just write your client code. Here&#39;s the usage example taken from the github project:</p>
-<pre><code class="lang-js">var assert = require(&#39;assert&#39;)
-  , zkplus = require(&#39;zkplus&#39;)
-
-var client = zkplus.createClient({
-  servers: [{
-    host: &#39;localhost&#39;
-    , port: 2181
-  }]
-});
-
-client.on(&#39;connect&#39;, function () {
-  client.mkdirp(&#39;/foo/bar&#39;, function (err) {
-    assert.ifError(err);
-    client.rmr(&#39;/foo&#39;, function (err) {
-      assert.ifError(err);
-      client.close();
-    });
-  });
-});</code></pre>
+      <div class="post-body"><h3><a href="/posts/when-semicolons-are-not-optional.html">When Semicolons Are Not Optional</a></h3>
+<p>May 15, 2013</p>
+<p>Use semicolons. But if you don&#39;t use semicolons, know when they&#39;re not optional.</p>
+<pre><code class="lang-js">// here we want to create a function and call it immediately
+(function(msg){
+  console.log(msg)
+})(&#39;wow&#39;)</code></pre>
+<pre><code class="lang-js">// but what if we have two of these in a row?
+(function(msg){
+  console.log(msg)
+})(&#39;wow&#39;)
+(function(msg){
+  console.log(msg)
+})(&#39;wow&#39;)
+// produces a TypeError: undefined is not a function</code></pre>
+<p>wha!?</p>
+<pre><code class="lang-js">;(function(msg){
+  console.log(msg)
+})(&#39;wow&#39;)
+;(function(msg){
+  console.log(msg)
+})(&#39;wow&#39;)</code></pre>
+<p>ahh.. much better! so basically, if you&#39;re not going to do anything with a result wrapped in parentheses, put a semicolon in front of it. that&#39;s it!</p>
 
         <div class="clear"></div>
       </div><br>

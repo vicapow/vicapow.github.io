@@ -1,5 +1,5 @@
 ### [What Do I Want?](/posts/what-do-i-want.html)
-January 02, 2013
+January 2, 2013
 
 A while ago I was asked the question "what do you want?" it took me back. It wasn't something I really thought of much. So I took the time to write a few things down and a few days ago I came across that text file. here it is bellow:
 

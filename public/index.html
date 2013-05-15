@@ -1,4 +1,163 @@
-<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><title> a blog by victor powell</title><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/bootstrap-responsive.min.css"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700"></head><body><div class="container"><div class="row-fluid"><div class="span12"><h2>a blog by <a href="http://vctr.me">victor powell (vicapow)</a></h2></div></div><h3><a href="/posts/technical-discrepancies-in-the-movie-oblivion.html">Technical Discrepancies In The Movie Oblivion (Spoiler Alert)</a></h3>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> a blog by victor powell</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row-fluid">
+        <div class="span12">
+          <h2>a blog by <a href="http://vctr.me">victor powell (vicapow)</a></h2>
+        </div>
+      </div><style>
+  .graph{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  .bar { 
+    background-color: steelblue;
+    position: absolute;
+    border-left: 1px solid #fff;
+    margin-left: -1px;
+  }
+
+  .bar .bar-label {
+    font-size: 2em;
+    position: absolute;
+    color: #fff;
+    width: 30em;
+    left: -15em;
+    text-align: center;
+    background-color: none;
+  }
+
+  .bar .bar-label.x-axis{
+    font-size: 1.2em;
+  }
+
+  .reanchor {
+    position: absolute;
+    left: 50%;
+    width: 1px;
+    height: 1px;
+  }
+
+  .axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+  #responsive-container{
+    width: 100%;
+    height: 500px;
+  }
+</style>
+<h3><a href="/posts/responsive-d3.html">Responsive D3</a></h3>
+<p> May 15, 2013 </p>
+<div id="responsive-container"></div>
+<script src="http://d3js.org/d3.v3.min.js?clear"></script>
+<script type='text/javascript'>
+  // inspired by: http://bl.ocks.org/mbostock/3048450
+  // dhm function from: http://stackoverflow.com/questions/8528382/javascript-show-milliseconds-as-dayshoursmins-without-seconds
+  function dhm(t){
+      var cd = 24 * 60 * 60 * 1000,
+          ch = 60 * 60 * 1000,
+          d = Math.floor(t / cd),
+          h = '0' + Math.floor( (t - d * cd) / ch),
+          m = '0' + Math.round( (t - d * cd - h * ch) / 60000);
+      return [d, h.substr(-2), m.substr(-2)].join(':');
+  }
+  d3.json('/examples/sleepdata.json', function(err, values){
+    if(err) throw err
+    // pluck only the sleep duration data
+    values = values.map(function(d){ return d.duration})
+    var formatCount = d3.format(',.0f');
+
+    var x = d3.scale.linear()
+      .domain([d3.min(values), d3.max(values)])
+      .range([0, 100]);
+
+    var data = d3.layout.histogram()
+      .bins(x.ticks(10))(values);
+    
+    // adjust the domain of the x axis
+    x.domain([data[0].x, data[data.length-1].x + data[data.length-1].dx])
+    
+    var y = d3.scale.linear()
+      .domain([0, d3.max(data, function(d){ return d.y; })])
+      .range([0, 100]);
+
+    var graph = d3.select('#responsive-container').append('div')
+      .attr('class', 'graph')
+
+    var bar = graph.selectAll('.bar')
+      .data(data)
+      .enter()
+        .append('div')
+          .attr('class', 'bar')
+          .style('width', (x(data[0].dx) - x(0)) + '%')
+          .style('height', function(d){ return y(d.y) + '%'; })
+          .style('left', function(d){ return x(d.x) + '%'; })
+          .style('bottom', '0')
+
+    // top label
+    bar.append('div')
+      .attr('class', 'reanchor')
+      .style('top', '0.5em')
+      .append('div')
+        .attr('class', 'bar-label')
+        .attr('x', (x(data[0].dx) - x(0)) / 2 )
+        .text(function(d){ return formatCount(d.y); });
+    
+    // bottom label
+    bar.append('div')
+      .attr('class', 'reanchor')
+      .style('bottom', '30px')
+      .append('div')
+        .attr('class', 'bar-label x-axis')
+        .attr('x', (x(data[0].dx) - x(0)) / 2 )
+        .text(function(d){ return dhm(d.x) + ' - ' + dhm(d.x + d.dx); });
+    
+    // reset em's relative to the width of the document
+    function resize(){
+      console.log('resize')
+      var graph = document.getElementsByClassName('graph')[0]
+      graph.style.fontSize = (graph.offsetWidth / 75) + 'px';
+    }
+    window.onresize = resize
+    resize()
+  });
+</script><h3><a href="/posts/when-semicolons-are-not-optional.html">When Semicolons Are Not Optional</a></h3>
+<p>May 15, 2013</p>
+<p>Use semicolons. But if you don&#39;t use semicolons, know when they&#39;re not optional.</p>
+<pre><code class="lang-js">// here we want to create a function and call it immediately
+(function(msg){
+  console.log(msg)
+})(&#39;wow&#39;)</code></pre>
+<pre><code class="lang-js">// but what if we have two of these in a row?
+(function(msg){
+  console.log(msg)
+})(&#39;wow&#39;)
+(function(msg){
+  console.log(msg)
+})(&#39;wow&#39;)
+// produces a TypeError: undefined is not a function</code></pre>
+<p>wha!?</p>
+<pre><code class="lang-js">;(function(msg){
+  console.log(msg)
+})(&#39;wow&#39;)
+;(function(msg){
+  console.log(msg)
+})(&#39;wow&#39;)</code></pre>
+<p>ahh.. much better! so basically, if you&#39;re not going to do anything with a result wrapped in parentheses, put a semicolon in front of it. that&#39;s it!</p>
+<h3><a href="/posts/technical-discrepancies-in-the-movie-oblivion.html">Technical Discrepancies In The Movie Oblivion (Spoiler Alert)</a></h3>
 <p>April 27, 2013</p>
 <ol>
 <li><p>Why were the clones soulless when they first invaded the planet but not while working as drone repair people?</p>
@@ -46,7 +205,7 @@ fn main() {
   }
 }</code></pre>
 <h3><a href="/posts/what-do-i-want.html">What Do I Want?</a></h3>
-<p>January 02, 2013</p>
+<p>January 2, 2013</p>
 <p>A while ago I was asked the question &quot;what do you want?&quot; it took me back. It wasn&#39;t something I really thought of much. So I took the time to write a few things down and a few days ago I came across that text file. here it is bellow:</p>
 <ul>
 <li><p>I want to be in control of what I decide to work on.</p>
@@ -124,7 +283,9 @@ client.on(&#39;connect&#39;, function () {
 <p>to start the server or</p>
 <pre><code>zookeeper stop</code></pre>
 <p>to stop it. yay!!</p>
-</div><script src="/js/main.js"></script><script type="text/javascript">
+
+    </div>
+    <script src="/js/main.js"></script><script type="text/javascript">
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-39250901-2']);
   _gaq.push(['_trackPageview']);
@@ -133,4 +294,6 @@ client.on(&#39;connect&#39;, function () {
     ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
-</script></body></html>
+</script>
+  </body>
+</html>
