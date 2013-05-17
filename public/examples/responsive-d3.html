@@ -43,9 +43,6 @@
     height: 500px;
   }
 </style>
-<h3><a href="/posts/responsive-d3.html">Responsive D3</a></h3>
-<p> May 15, 2013 </p>
-<p> note: Resize the page to see the effect </p>
 <div id="responsive-container"></div>
 <script src="http://d3js.org/d3.v3.min.js?clear"></script>
 <script type='text/javascript'>
@@ -99,7 +96,7 @@
       .append('div')
         .attr('class', 'bar-label')
         .attr('x', (x(data[0].dx) - x(0)) / 2 )
-        .text(function(d){ return formatCount(d.y); });
+        .text(function(d){ return formatCount(d.y); })
     
     // bottom label
     bar.append('div')
@@ -108,7 +105,12 @@
       .append('div')
         .attr('class', 'bar-label x-axis')
         .attr('x', (x(data[0].dx) - x(0)) / 2 )
-        .text(function(d){ return dhm(d.x) + ' - ' + dhm(d.x + d.dx); });
+        .text(function(d){ return dhm(d.x) + ' - ' + dhm(d.x + d.dx); })
+    
+    graph.append('p')
+      .style('text-align','right')
+      .style('font-size', '2em')
+      .text('my sleep duration. n = 50')
     
     // reset em's relative to the width of the document
     function resize(){

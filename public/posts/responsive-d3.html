@@ -55,9 +55,6 @@
     height: 500px;
   }
 </style>
-<h3><a href="/posts/responsive-d3.html">Responsive D3</a></h3>
-<p> May 15, 2013 </p>
-<p> note: Resize the page to see the effect </p>
 <div id="responsive-container"></div>
 <script src="http://d3js.org/d3.v3.min.js?clear"></script>
 <script type='text/javascript'>
@@ -111,7 +108,7 @@
       .append('div')
         .attr('class', 'bar-label')
         .attr('x', (x(data[0].dx) - x(0)) / 2 )
-        .text(function(d){ return formatCount(d.y); });
+        .text(function(d){ return formatCount(d.y); })
     
     // bottom label
     bar.append('div')
@@ -120,7 +117,12 @@
       .append('div')
         .attr('class', 'bar-label x-axis')
         .attr('x', (x(data[0].dx) - x(0)) / 2 )
-        .text(function(d){ return dhm(d.x) + ' - ' + dhm(d.x + d.dx); });
+        .text(function(d){ return dhm(d.x) + ' - ' + dhm(d.x + d.dx); })
+    
+    graph.append('p')
+      .style('text-align','right')
+      .style('font-size', '2em')
+      .text('my sleep duration. n = 50')
     
     // reset em's relative to the width of the document
     function resize(){
@@ -131,7 +133,40 @@
     window.onresize = resize
     resize()
   });
-</script>
+</script><h3><a href="/posts/responsive-d3.html">Responsive D3</a></h3>
+<p>May 15, 2013</p>
+<ul>
+<li><strong>note:</strong> Resize the page to see the effect</li>
+</ul>
+<h2>So what techniques make this possible?</h2>
+<h3>1. don&#39;t use svg!</h3>
+<p>  I know this seems to goes against idiomatic d3 but remember that d3 is</p>
+<blockquote>
+<p>...not a monolithic framework that seeks to provide every conceivable feature. Instead, D3 solves the crux of the problem: efficient manipulation of documents based on data. </p>
+</blockquote>
+<p>  And that&#39;s exactly what we&#39;re doing here except with non-svg DOM elements because of the lack of support for percentage based positioning of svg elements. (if you&#39;ve found a better technique, please let me know!) </p>
+<p>  <strong>update</strong>: After writing this blog post, I found an example that does achieve a similar effect with svg elements using the the <code>preserveAspectRatio=&quot;none&quot;</code> <code>&lt;svg&gt;</code> property in combination with <code>vector-effect: non-scaling-stroke</code> on <code>&lt;path&gt;</code> elements</p>
+<h3>2. use container divs</h3>
+<p>  A common pattern that I often see is trying to center align relative to a percentage distance from a parent element. for these cases, you can use an extra wrapper or container div</p>
+<pre><code class="lang-css">.label-container{
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  left: 50%;
+}
+.label-container .label{
+  width: 100px;
+  position: absolute;
+  left: -50px; /* half of the width */
+  text-align: center;
+}</code></pre>
+<h3>3. Use &#39;em&#39; not &#39;px&#39; !</h3>
+<p>  This will allow text elements to resize automatically when the font-size of their parent element changes. Then, when the window resizes, you can update the font size of the parent element like so:</p>
+<pre><code class="lang-js">  window.onresize = function(){
+    var graph = document.getElementsByClassName(&#39;graph&#39;)[0]
+    graph.style.fontSize = (graph.offsetWidth / 75) + &#39;px&#39;
+  }</code></pre>
+
         <div class="clear"></div>
       </div><br>
       <div id="disqus_thread"></div>
