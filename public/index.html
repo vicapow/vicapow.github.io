@@ -137,7 +137,40 @@
     window.onresize = resize
     resize()
   });
-</script><h3><a href="/posts/when-semicolons-are-not-optional.html">When Semicolons Are Not Optional</a></h3>
+</script><h3><a href="/posts/responsive-d3.html">Responsive D3</a></h3>
+<p>May 15, 2013</p>
+<ul>
+<li><strong>note:</strong> Resize the page to see the effect</li>
+</ul>
+<h2>So what techniques make this possible?</h2>
+<h3>1. don&#39;t use svg!</h3>
+<p>  I know this seems to goes against idiomatic d3 but remember that d3 is</p>
+<blockquote>
+<p>...not a monolithic framework that seeks to provide every conceivable feature. Instead, D3 solves the crux of the problem: efficient manipulation of documents based on data. </p>
+</blockquote>
+<p>  And that&#39;s exactly what we&#39;re doing here except with non-svg DOM elements because of the lack of support for percentage based positioning of svg elements. (if you&#39;ve found a better technique, please let me know!) </p>
+<p>  <strong>update</strong>: After writing this blog post, I found an example that does achieve a similar effect with svg elements using the the <code>preserveAspectRatio=&quot;none&quot;</code> <code>&lt;svg&gt;</code> property in combination with <code>vector-effect: non-scaling-stroke</code> on <code>&lt;path&gt;</code> elements</p>
+<h3>2. use container divs</h3>
+<p>  A common pattern that I often see is trying to center align relative to a percentage distance from a parent element. for these cases, you can use an extra wrapper or container div</p>
+<pre><code class="lang-css">.label-container{
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  left: 50%;
+}
+.label-container .label{
+  width: 100px;
+  position: absolute;
+  left: -50px; /* half of the width */
+  text-align: center;
+}</code></pre>
+<h3>3. Use &#39;em&#39; not &#39;px&#39; !</h3>
+<p>  This will allow text elements to resize automatically when the font-size of their parent element changes. Then, when the window resizes, you can update the font size of the parent element like so:</p>
+<pre><code class="lang-js">  window.onresize = function(){
+    var graph = document.getElementsByClassName(&#39;graph&#39;)[0]
+    graph.style.fontSize = (graph.offsetWidth / 75) + &#39;px&#39;
+  }</code></pre>
+<h3><a href="/posts/when-semicolons-are-not-optional.html">When Semicolons Are Not Optional</a></h3>
 <p>May 15, 2013</p>
 <p>Use semicolons. But if you don&#39;t use semicolons, know when they&#39;re not optional.</p>
 <pre><code class="lang-js">// here we want to create a function and call it immediately
