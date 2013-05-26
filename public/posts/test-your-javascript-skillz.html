@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> a blog by victor powell</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700">
+  </head>
+  <body>
+    <div class="container"><br><a href="/">back</a>
+      <div class="post-body">
+        <div class="container"><h3><a href="/posts/test-your-javascript-skillz.html">Test Your Javascript Skillz</a></h3>
+<p>May 25, 2013</p>
+<h2>Hoisting</h2>
+<h3>will it throw an error?</h3>
+<pre><code class="lang-js">foo()
+function foo(){
+  console.log(&#39;foo&#39;)
+}</code></pre>
+<h4>answer</h4>
+<p>no</p>
+<hr>
+<pre><code class="lang-js">bar()
+var bar = function(){
+  console.log(&#39;bar&#39;)
+}</code></pre>
+<h4>answer</h4>
+<p>yes <code>TypeError: undefined is not a function</code></p>
+<hr>
+<pre><code class="lang-js">if(false){
+  var konnichiwa = &#39;bonjour&#39;
+}
+console.log(konnichiwa)</code></pre>
+<h4>answer</h4>
+<p>no</p>
+<hr>
+<pre><code class="lang-js">if(false){
+  var hallo = &#39;privet&#39;
+}
+console.log(nihao)</code></pre>
+<h4>answer</h4>
+<p>yes <code>ReferenceError: nihao is not defined</code></p>
+<hr>
+<h2>The Event Loop, Asynchronicity, And Closure Scope</h2>
+<h4>what is the entire output to the console after 100ms for the following code?</h4>
+<pre><code class="lang-js">var array = []
+for(var i = 0; i &lt; 5; i++){
+  setTimeout(function(){
+    array.push(i)
+  }, 100)
+}
+
+console.log(&#39;array: &#39;, array)
+setTimeout(function(){
+  console.log(&#39;array: &#39;, array)
+},  100)</code></pre>
+<h4>answer</h4>
+<blockquote>
+<p>array: []</p>
+<p>array: [5,5,5,5,5]</p>
+</blockquote>
+<hr>
+<h4>what if we changed the <code>100</code> in the second <code>setTimeout</code> to <code>99</code> ?</h4>
+<h4>answer</h4>
+<blockquote>
+<p>array: []</p>
+<p>array: []</p>
+</blockquote>
+<hr>
+<h4>how could we write the code above to produce the following output:</h4>
+<blockquote>
+<p>array: []</p>
+<p>array: [0,1,2,3,4]</p>
+</blockquote>
+<h4>answer</h4>
+<pre><code class="lang-js">var array = []
+for(var i = 0; i &lt; 5; i++){
+  (function(i){ // closure
+    setTimeout(function(){
+      array.push(i)
+    }, 100)
+  })(i)
+}
+
+console.log(&#39;array: &#39;, array)
+setTimeout(function(){
+  console.log(&#39;array: &#39;, array)
+},  100)</code></pre>
+<hr>
+<h4>what would be the output if we changed <code>i</code> to <code>i * 2</code> in the argument to the closure?</h4>
+<pre><code class="lang-js">var array = []
+for(var i = 0; i &lt; 5; i++){
+  (function(i){
+    setTimeout(function(){
+      array.push(i)
+    }, 100)
+  })(i * 2) // used to be just `i`
+}
+
+console.log(&#39;array: &#39;, array)
+setTimeout(function(){
+  console.log(&#39;array: &#39;, array)
+},  100)</code></pre>
+<h4>answer</h4>
+<blockquote>
+<p>array: []</p>
+<p>array: [0,2,4,6,8]</p>
+</blockquote>
+<hr>
+<h4>what is the output?</h4>
+<pre><code class="lang-js">function foo(baz){
+  var hola = &#39;moshi moshi!&#39;
+  baz()
+}
+
+function bar(){
+  console.log(hola)
+}
+
+foo(bar)</code></pre>
+<h4>answer</h4>
+<blockquote>
+<p><code>ReferenceError: hola is not defined</code></p>
+</blockquote>
+<hr>
+<h2>Automatic Semicolon Insertion</h2>
+<h4>what is printed to the console?</h4>
+<pre><code class="lang-js">function foo(){
+  return 
+  {
+    foo : &quot;bar&quot;
+  }
+}
+console.log( typeof foo() === &#39;undefined&#39;)</code></pre>
+<h5>answer</h5>
+<blockquote>
+<p>true</p>
+</blockquote>
+<hr>
+<pre><code class="lang-js">var foo = function(){
+  console.log(&#39;foo&#39;)
+}
+(function(){
+  console.log(&#39;bar&#39;)
+})()</code></pre>
+<h5>answer</h5>
+<blockquote>
+<p><code>TypeError: undefined is not a function</code></p>
+</blockquote>
+<hr>
+<h4>How would you fix the code above?</h4>
+<h5>answer</h5>
+<pre><code class="lang-js">var foo = function(){
+  console.log(&#39;foo&#39;)
+}
+;(function(){ // comma
+  console.log(&#39;bar&#39;)
+})()</code></pre>
+
+        </div>
+        <div class="clear"></div>
+      </div><br>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        /* CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE */
+        var disqus_shortname = 'vicapow'; // required: replace example with your forum shortname
+        /* DON'T EDIT BELOW THIS LINE */
+        (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the comments</noscript><a href="/">back</a>
+    </div>
+    <script src="/js/main.js"></script><script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-39250901-2']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+  </body>
+</html>
