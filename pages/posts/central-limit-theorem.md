@@ -27,7 +27,7 @@ for 2 coin flips, all possible outcomes are:
     1 + 0 -> 1
     1 + 1 -> 2
 
-so for 2 coin flips, there's only 3 different possible expected coin sums. But unlike the other outcomes, the outcome where the coins total 1, is possible in two coin combinations so the probably is double in this case. Our expect percentages would than look like:
+so for 2 coin flips, there's only 3 different possible expected coin sums. But unlike the other outcomes, the outcome where the coins total 1, is possible in two coin combinations so the probability is double in this case. Our expect percentages would than look like:
 
 
     0: 25%
