@@ -8,26 +8,26 @@ May 29, 2013
 
 which is what we see here. at every triangle, the ball has a 50/50 shot of going to the left or to the right. you can also think of it like coin flips, where the number of coin flips is `(bins -1)`
 
-if we assign heads, 0, and tails 1 (or 0 for left, 1 for right in the case of the visualization above)
+if we assign heads to 0, and tails, 1 (or 0 for left, 1 for right as in the case of the visualization above)
 
-for 1 coin flip, the possible values are:
+for 1 coin flip, the possible sum of coin flips are:
 
     0 -> 0
     1 -> 1
 
-so for 1 coin flip, theirs 2 different possible outcomes, each quality likely. the expected percentage of the possible outcomes is than:
+so for 1 coin flip, there's 2 different possible outcomes, each equally likely. the expected percentage of the possible outcomes is than:
 
     0: 50%
     1: 50%
 
-for 2 coin flips, the possible outcomes are:
+for 2 coin flips, all possible outcomes are:
 
     0 + 0 -> 0
     0 + 1 -> 1
     1 + 0 -> 1
     1 + 1 -> 2
 
-so for 2 coin flips, theirs 3 different possible outcomes. But unlike the other outcomes, the outcome where the coins total 1, is possible in two coin combinations so the probably is double in that case. Our expect percentages would than look like:
+so for 2 coin flips, there's only 3 different possible expected coin sums. But unlike the other outcomes, the outcome where the coins total 1, is possible in two coin combinations so the probably is double in this case. Our expect percentages would than look like:
 
 
     0: 25%
