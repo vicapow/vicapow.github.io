@@ -32,7 +32,7 @@ so for 2 coin flips, there's only 3 different possible expected coin sums. But u
 
     0: 25%
     1: 50%
-    3: 25%
+    2: 25%
 
 give it a try!
 
