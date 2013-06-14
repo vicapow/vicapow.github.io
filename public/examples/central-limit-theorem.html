@@ -33,7 +33,6 @@
   <br />
   <br />
   <div id="central-limit-therom-vis"></div>
-  <script src="http://d3js.org/d3.v3.min.js?clear"></script>
   <script type="application/javascript">
     function lvl(d){
       // given a triangle element index, calculate it's y depth within
@@ -144,7 +143,7 @@
           .range([0, width - margin.left - margin.right])
       var formatCount = d3.format(",.0f")
       var data = d3.layout.histogram().bins(d3.range(0,bins + 1))(values)
-      var histogram = d3.select('svg')
+      var histogram = d3.select('#central-limit-therom-vis').select('svg')
         .append('g')
         .attr('transform','translate(' + margin.left + ',' + histogram_y + ')')
 

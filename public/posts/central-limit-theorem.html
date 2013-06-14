@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700">
+    <script src="http://d3js.org/d3.v3.min.js"></script>
   </head>
   <body>
     <div class="container"><br><a href="/">back</a><div style="float:right">
@@ -49,7 +50,6 @@
   <br />
   <br />
   <div id="central-limit-therom-vis"></div>
-  <script src="http://d3js.org/d3.v3.min.js?clear"></script>
   <script type="application/javascript">
     function lvl(d){
       // given a triangle element index, calculate it's y depth within
@@ -160,7 +160,7 @@
           .range([0, width - margin.left - margin.right])
       var formatCount = d3.format(",.0f")
       var data = d3.layout.histogram().bins(d3.range(0,bins + 1))(values)
-      var histogram = d3.select('svg')
+      var histogram = d3.select('#central-limit-therom-vis').select('svg')
         .append('g')
         .attr('transform','translate(' + margin.left + ',' + histogram_y + ')')
 
@@ -233,10 +233,10 @@
 </blockquote>
 <p>which is what we see here. at every triangle, the ball has a 50/50 shot of going to the left or to the right. you can also think of it like coin flips, where the number of coin flips is <code>(bins -1)</code></p>
 <p>if we assign heads to 0, and tails, 1 (or 0 for left, 1 for right as in the case of the visualization above)</p>
-<p>for 1 coin flip, the possible sum of coin flips are:</p>
+<p>for 1 coin flip, the possible sums of coin flips are:</p>
 <pre><code>0 -&gt; 0
 1 -&gt; 1</code></pre>
-<p>so for 1 coin flip, there&#39;s 2 different possible outcomes, each equally likely. the expected percentage of the possible outcomes is than:</p>
+<p>so for 1 coin flip, there are 2 different possible outcomes, each equally likely. the expected percentage of the possible outcomes is then:</p>
 <pre><code>0: 50%
 1: 50%</code></pre>
 <p>for 2 coin flips, all possible outcomes are:</p>
@@ -244,7 +244,7 @@
 0 + 1 -&gt; 1
 1 + 0 -&gt; 1
 1 + 1 -&gt; 2</code></pre>
-<p>so for 2 coin flips, there&#39;s only 3 different possible expected coin sums. But unlike the other outcomes, the outcome where the coins total 1, is possible in two coin combinations so the probability is double in this case. Our expect percentages would than look like:</p>
+<p>so for 2 coin flips, there&#39;s only 3 different possible expected coin sums. But unlike the other outcomes, the outcome where the coins total 1, is possible in two coin combinations so the probability is double in this case. Our expected percentages would then look like:</p>
 <pre><code>0: 25%
 1: 50%
 2: 25%</code></pre>
@@ -267,6 +267,7 @@
       </script>
       <noscript>Please enable JavaScript to view the comments</noscript><a href="/">back</a>
     </div>
+    <!-- - apply code highlighting-->
     <script src="/js/main.js"></script><script type="text/javascript">
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-39250901-2']);

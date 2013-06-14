@@ -10,8 +10,10 @@ html
         link(rel="stylesheet", href="/css/bootstrap-responsive.min.css")
         link(rel="stylesheet", href="/css/main.css")
         link(rel="stylesheet", href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700")
+      block script
+        script(src="http://d3js.org/d3.v3.min.js")
   body
     block body
-    block script
-      script(src="/js/main.js")
+    // - apply code highlighting
+    script(src="/js/main.js")
     include analytics.html
