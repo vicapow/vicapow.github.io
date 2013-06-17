@@ -1,4 +1,4 @@
-### [I'm Dyslexic And I Program](/posts/im-dyslexic-and-i-program.html)
+## [I'm Dyslexic And I Program](/posts/im-dyslexic-and-i-program.html)
 November 18, 2012
 
 I'm dyslexic. And no, that doesn't mean I read backwards. It also doesn't mean I'm stupid. From wikipedia:

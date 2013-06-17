@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      body {
+        font-family: 'Droid Sans', sans-serif;
+        font-size: 18px;
+      }
+
+      #central-limit-therom-vis .ball{
+        fill: steelblue;
+        opacity: 1;
+        stroke: #fff;
+      }
+
+      #central-limit-therom-vis .bar rect {
+        fill: steelblue;
+        shape-rendering: crispEdges;
+      }
+
+      #central-limit-therom-vis .bar text {
+        fill: #fff;
+      }
+
+      #central-limit-therom-vis .axis path, #central-limit-therom-vis .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
+      #central-limit-therom-vis .triangle{
+        stroke-linejoin: round;
+        stroke: black;
+        fill: black;
+        stroke-width: 4;
+      }
+    </style>
+  </head>
+  <body>
+    <label> delay </label>
+    <input type="number" name="speed" min="0" max="1000" value="500" step="100">
+    <label> bins </label>
+    <input type="number" name="bins" min="1" max="25" value="5">
+    <br />
+    <br />
+    <div id="central-limit-therom-vis"></div>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script type="application/javascript">
+      function lvl(d){
+        // given a triangle element index, calculate it's y depth within
+        // the larger peramind of triangles
+        d = d + 1
+        var i = 0, n = 1
+        while(i + n < d){
+          i += n
+          n++
+        }
+        return n - 1
+      }
+  
+      function pos(l){
+        // give a y level depth within the peramind of triangles, calculate
+        // the first triangle element index at that level
+        l = l + 1
+        var n = 0, i = 0
+        while( n < l) { i += n; n++ }
+        return i
+      }
+      var speed = 500
+        , step
+        , histogram_height = 100
+  
+      function init(bins, width){
+        var margin = { left : width/10, right : width/10, top : 10 , bottom : 30 }
+          , height = 450
+          , sx = (width - margin.left - margin.right) / bins
+          , sy = (height - histogram_height - margin.bottom -  100 ) / bins
+          , histogram_y = height - histogram_height - margin.bottom
+          , values = []
+          , ts = sy/3
+          , bs = sy/2
+          , dropping = true
+
+        var container = d3.select('#central-limit-therom-vis')
+        d3.select('#central-limit-therom-vis').selectAll('svg').remove()
+        var svg = container.append('svg')
+          .attr('height', height + 'px')
+          .attr('width', width + 'px')
+        console.log('svg', svg)
+        var g = svg.append('g')
+          .attr('transform', 'translate(' + (width / 2) + ',20)')
+
+        var path = g.selectAll('path')
+        path.data(d3.range(0, pos(bins + 1)))
+          .enter()
+            .append('g')
+              // position the triangles
+              .attr('transform', function(d){
+                var x = 0
+                var y = 0
+                var l = 0
+                y = lvl(d)
+                x = d - pos(y) + 1
+                l = (y + 2) * sx / 2
+                return 'translate(' + (sx * x - l) + ', ' +  (sy *  y ) + ')'
+              })
+              // draw the triangles
+              .append('path')
+                .attr('class', 'triangle')
+                .attr('d', 'M -' + (ts) + ' ' + (ts) + ' L ' + (ts) + ' ' + (ts) + ' L 0 -' + (ts/2) +' Z')
+
+        step = function(){
+          // drop a ball
+          g.append('circle')
+           .datum({lvl: -1, pos: 0})
+           .attr('class', 'ball')
+           .attr('r', (bs) + 'px')
+           .attr('cx', function(d){ return (d.pos * sx / 2) + 'px' })
+           .attr('cy', function(d){ return (d.lvl * sy - 50) + 'px' })
+           .style('display', 'none')
+           .transition()
+           .style('display','block')
+           .each('end', animate)
+        }
+
+        function animate(){
+          var c = d3.select(this)
+          var d = c.datum()
+          if(d.lvl > bins - 2) {
+            // drop the ball into its histogram bin
+            c.transition()
+              .duration(speed / 2)
+              .attr('cy', function(d){ return (d.lvl * sy + 20 + histogram_height) + 'px'})
+              .style('opacity', '0.0')
+              .remove() // remove the balls once they're invisible
+            values.push( bins / 2 + d.pos / 2)
+            update()
+            return
+          }
+          if(d.lvl === -1) d.pos = 0 // when the ball drops into the first position
+          else if( Math.random() > 0.5 ) d.pos++
+          else d.pos--
+          d.lvl++
+          c.datum(d)
+          c.transition()
+            .ease('bounce')
+            .attr('cx', function(d){ return (d.pos * sx / 2) + 'px' })
+            .attr('cy', function(d){ return (d.lvl * sy + sy) + 'px' })
+            .each('end', animate)
+          .duration(speed)
+        }
+
+        var x = d3.scale.linear()
+            .domain([0, bins])
+            .range([0, width - margin.left - margin.right])
+        var formatCount = d3.format(",.0f")
+        var data = d3.layout.histogram().bins(d3.range(0,bins + 1))(values)
+        var histogram = d3.select('#central-limit-therom-vis').select('svg')
+          .append('g')
+          .attr('transform','translate(' + margin.left + ',' + histogram_y + ')')
+
+        var xAxis = d3.svg.axis()
+          .scale(x)
+          .ticks(bins)
+          .orient('bottom')
+
+        var bar = histogram.selectAll('.bar')
+          .data(data)
+          .enter().append('g')
+            .attr('class', 'bar')
+
+        bar.append('rect')
+          .attr('x', 1)
+          .attr('width', x(data[0].dx) - 1)
+
+        bar.append('text')
+          .attr('dy', '.5em')
+          .attr('y', 10)
+          .attr('x', x(data[0].dx) / 2)
+          .attr('text-anchor', 'middle')
+
+        histogram.append('g')
+          .attr('class', 'x axis')
+          .attr('transform', 'translate(0,' + (histogram_height) + ')')
+          .call(xAxis)
+
+        function update(){
+          data = d3.layout.histogram().bins(d3.range(0, bins + 1))(values)
+          var bar = histogram.selectAll('.bar')
+          var y = d3.scale.linear()
+            .domain([0, d3.max(data.map(function(d){ return d.y }))])
+            .range([histogram_height, 0])
+          bar.data(data)
+            .transition()
+            .duration(speed)
+            .attr('transform', function(d){ return 'translate(' + x(d.x) + ',' + y(d.y) + ')' })
+            .select('rect')
+              .attr('height', function(d){ return (histogram_height - y(d.y)) })
+          bar.select('text')
+            .text(function(d){ return Math.floor(d.y / values.length * 100) + '%' })
+        }
+        update()
+      }
+  
+      ;(function interval(){
+        if(step) step()
+        setTimeout(interval, speed)
+      })()
+  
+  
+      // setup buttons
+      document.getElementsByName('speed')[0].onchange = function(e){
+        speed = e.target.value
+      }
+      document.getElementsByName('bins')[0].onchange = restart;
+  
+      function restart(e){
+        init(Number( e ? e.target.value : 5), Number(document.getElementById('central-limit-therom-vis').offsetWidth))
+      }
+  
+      restart()
+  
+    </script>
+  </body>
+</html>

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>
   </head>
   <body>
@@ -18,388 +19,19 @@
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 </div>
         </div>
-      </div>
-<style type="text/css">
-  #the-mean-visualization {
-    font: 10px sans-serif;
-  }
-  #the-mean-visualization .ball{
-    fill: steelblue;
-    opacity: 1;
-    box-shadow: -5px -5px 5px #888;
-    -webkit-box-shadow: -5px -5px 5px #888;
-    stroke: #fff;
-    opacity: 1;
-  }
-
-  #the-mean-visualization .ball.mean{
-    fill: #ff6d00;
-    fill: #ffb958;
-  }
-
-  #the-mean-visualization .axis path, #the-mean-visualization .axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-  }
-
-  #the-mean-visualization .ball-group .btn-close .btn-bg{
-    fill: black;
-    opacity: 1;
-  }
-  
-  #the-mean-visualization .ball-group .btn-close text{
-    fill: white;
-  }
-
-  #the-mean-visualization .ball-group .btn-close{
-    opacity: 0;
-    transition: all 0.1s;
-  }
-
-  #the-mean-visualization .ball-group:hover .btn-close{
-    opacity: 1;
-    cursor: pointer;
-  }
-
-  #the-mean-visualization .ball-group:active .btn-close{
-    display: none;
-    opacity: 0;
-  }
-  
-  #the-mean-visualization .ball-group:active .btn-close:active{
-    display: block;
-    opacity: 1;
-  }
-</style>
-<button id="add-ball"> add ball </button>
-<button id="remove-all"> remove all but one </button>
-<div id="the-mean-visualization"></div>
-<script type="application/javascript">
-  var container = d3.select('#the-mean-visualization')
-    var margin = { left : 40, top : 10, right : 40 }
-    , w = window.getComputedStyle(container.node()).width.slice(0,-2) - margin.left - margin.right
-    , h = 100
-    , svg = container.append('svg')
-      .attr('width', w + margin.left + margin.right)
-      .attr('height', h * 2)
-      .append('g')
-        .attr('transform'
-        , 'translate(' + margin.left + ',' + margin.top + ')')
-    
-    , x = d3.scale.linear().domain([0, 100]).range([0, w])
-    , y = d3.scale.linear().domain([10, 0]).range([0, h])
-    , r = 20
-    , data = d3.range(0, 4).map(function(d){ return { x : 20 + d * 20, y: 2} })
-  
-    , drag = d3.behavior.drag()
-      .on('drag', dragmove)
-      .on('dragend', dragend)
-  
-    , circles = svg.selectAll('.ball-group')
-  
-    , meanball = svg.append('circle')
-      .attr('class', 'ball mean')
-      .attr('r', r * 2)
-      .attr('cx', function(d){ return x(100) })
-      .attr('cy', function(d){ return y(2) })
-  
-  function setupCircles(){
-    d3.selectAll('.ball-group').remove()
-    var d = circles.data(data)
-    d.exit().remove()
-    var g = d.enter()
-        .append('g')
-        .attr('class', 'ball-group')
-        .attr('transform', function(d){
-          return 'translate(' + x(d.x) + ',' + y(d.y) + ')'
-        })
-        .call(drag)
-    g.append('circle')
-      .attr('class', 'ball')
-      .attr('r', r)
-    var btn = g.append('g')
-      .attr('class', 'btn-close')
-      .attr('transform', 'translate(15,-15)')
-    var bg = btn.append('circle')
-      .attr('class', 'btn-bg')
-      .attr('r', '10')
-    btn.append('text')
-        .text('x')
-        .attr('font-size', '2em')
-        .attr('font-family', 'helvetica')
-        .attr('x', -5)
-        .attr('y', 5)
-    btn.on('click', function(d){
-      if(data.length <= 1) return
-      data.splice(data.indexOf(d),1)
-      setupCircles()
-      updateMean()
-    })
-  }
-  
-  setupCircles()
-  
-  function dragmove(d){
-    d.x += x.invert(d3.event.dx)
-    if(d.x > x.invert(w)) d.x = x.invert(w)
-    if(d.x < x.invert(0)) d.x = x.invert(0)
-    d3.select(this)
-      .attr('transform', function(d){
-        return 'translate(' + x(d.x) + ',' + y(d.y) + ')'
-      })
-    updateMean()
-  }
-  
-  function dragend(d){
-    d.x = Math.round(d.x)
-    d3.select(this)
-      .attr('cx', x(d.x))
-    updateMean()
-  }
-  
-  var axis = d3.svg.axis().scale(x).orient("bottom")
-  svg.append('g')
-    .attr('class', 'x axis')
-    .attr('transform', 'translate(0,' + h + ')')
-    .call(axis)
-  
-  function updateMean(){
-    var set = data.map( function(d){ return d.x } )
-    meanball.attr('cx', x( d3.mean( set ) ) )
-  }
-  
-  updateMean()
-  
-  document.getElementById('add-ball').onclick = function(){
-    data.push({ x : Math.random() * x.invert(w), y : 2})
-    setupCircles()
-    updateMean()
-  }
-  document.getElementById('remove-all').onclick = function(){
-    data = [{ x : 50 , y : 2 }]
-    setupCircles()
-    updateMean()
-  }
-</script><h3><a href="/posts/the-mean-visualized.html">The Mean Visualized</a></h3>
+      </div><h2><a href="/posts/the-mean-visualized.html">The Mean Visualized</a></h2>
 <p>June 13th, 2013</p>
+<iframe class="matchmysize" src="/experiments/the-mean-visualized.html"></iframe>
+
 <p>This is a simple visualization of the Arithmetic mean (aka, the average.) <em>Click</em> and <em>drag</em> the balls around and watch the mean (the larger yellow ball) update.</p>
 <p>The mean is often used to describe the central tendency of a set of data values. It&#39;s one possible answer to the question &quot;what is a typical value for the data set?&quot;</p>
 <p>It&#39;s important to remember that the mean is not a <code>robust statistic</code> meaning that outliers will have a large effect on the mean. You can see this in the visualization by adding several balls to one side in a concentrated area and then adding a single ball to the opposite side.</p>
 <p>Note that the size of the balls are meaningless in the visualization. They&#39;re only large enough to be clicked on. The mean ball has twice the radius of the others only so you can still see it when the other balls are in front of it.</p>
-<p>You can find the code to this visualization here: <a href="bl.ocks.org/vicapow/5778069"><a href="http://bl.ocks.org/vicapow/5778069">http://bl.ocks.org/vicapow/5778069</a></a></p>
-  <style type="text/css">
-    #central-limit-therom-vis .ball{
-      fill: steelblue;
-      opacity: 1;
-      stroke: #fff;
-    }
-
-    #central-limit-therom-vis .bar rect {
-      fill: steelblue;
-      shape-rendering: crispEdges;
-    }
-
-    #central-limit-therom-vis .bar text {
-      fill: #fff;
-    }
-
-    #central-limit-therom-vis .axis path, #central-limit-therom-vis .axis line {
-      fill: none;
-      stroke: #000;
-      shape-rendering: crispEdges;
-    }
-    #central-limit-therom-vis .triangle{
-      stroke-linejoin: round;
-      stroke: black;
-      fill: black;
-      stroke-width: 4;
-    }
-  </style>
-  <label> delay </label>
-  <input type="number" name="speed" min="0" max="1000" value="500" step="100">
-  <label> bins </label>
-  <input type="number" name="bins" min="1" max="25" value="5">
-  <br />
-  <br />
-  <div id="central-limit-therom-vis"></div>
-  <script type="application/javascript">
-    function lvl(d){
-      // given a triangle element index, calculate it's y depth within
-      // the larger peramind of triangles
-      d = d + 1
-      var i = 0, n = 1
-      while(i + n < d){
-        i += n
-        n++
-      }
-      return n - 1
-    }
-    
-    function pos(l){
-      // give a y level depth within the peramind of triangles, calculate
-      // the first triangle element index at that level
-      l = l + 1
-      var n = 0, i = 0
-      while( n < l) { i += n; n++ }
-      return i
-    }
-    var speed = 500
-      , step
-      , histogram_height = 100
-    
-    function init(bins, width){
-      var margin = { left : width/10, right : width/10, top : 10 , bottom : 30 }
-        , height = 450
-        , sx = (width - margin.left - margin.right) / bins
-        , sy = (height - histogram_height - margin.bottom -  100 ) / bins
-        , histogram_y = height - histogram_height - margin.bottom
-        , values = []
-        , ts = sy/3
-        , bs = sy/2
-        , dropping = true
-
-      var container = d3.select('#central-limit-therom-vis')
-      d3.select('#central-limit-therom-vis').selectAll('svg').remove()
-      var svg = container.append('svg')
-        .attr('height', height + 'px')
-        .attr('width', width + 'px')
-      console.log('svg', svg)
-      var g = svg.append('g')
-        .attr('transform', 'translate(' + (width / 2) + ',20)')
-
-      var path = g.selectAll('path')
-      path.data(d3.range(0, pos(bins + 1)))
-        .enter()
-          .append('g')
-            // position the triangles
-            .attr('transform', function(d){
-              var x = 0
-              var y = 0
-              var l = 0
-              y = lvl(d)
-              x = d - pos(y) + 1
-              l = (y + 2) * sx / 2
-              return 'translate(' + (sx * x - l) + ', ' +  (sy *  y ) + ')'
-            })
-            // draw the triangles
-            .append('path')
-              .attr('class', 'triangle')
-              .attr('d', 'M -' + (ts) + ' ' + (ts) + ' L ' + (ts) + ' ' + (ts) + ' L 0 -' + (ts/2) +' Z')
-
-      step = function(){
-        // drop a ball
-        g.append('circle')
-         .datum({lvl: -1, pos: 0})
-         .attr('class', 'ball')
-         .attr('r', (bs) + 'px')
-         .attr('cx', function(d){ return (d.pos * sx / 2) + 'px' })
-         .attr('cy', function(d){ return (d.lvl * sy - 50) + 'px' })
-         .style('display', 'none')
-         .transition()
-         .style('display','block')
-         .each('end', animate)
-      }
-
-      function animate(){
-        var c = d3.select(this)
-        var d = c.datum()
-        if(d.lvl > bins - 2) {
-          // drop the ball into its histogram bin
-          c.transition()
-            .duration(speed / 2)
-            .attr('cy', function(d){ return (d.lvl * sy + 20 + histogram_height) + 'px'})
-            .style('opacity', '0.0')
-            .remove() // remove the balls once they're invisible
-          values.push( bins / 2 + d.pos / 2)
-          update()
-          return
-        }
-        if(d.lvl === -1) d.pos = 0 // when the ball drops into the first position
-        else if( Math.random() > 0.5 ) d.pos++
-        else d.pos--
-        d.lvl++
-        c.datum(d)
-        c.transition()
-          .ease('bounce')
-          .attr('cx', function(d){ return (d.pos * sx / 2) + 'px' })
-          .attr('cy', function(d){ return (d.lvl * sy + sy) + 'px' })
-          .each('end', animate)
-        .duration(speed)
-      }
-
-      var x = d3.scale.linear()
-          .domain([0, bins])
-          .range([0, width - margin.left - margin.right])
-      var formatCount = d3.format(",.0f")
-      var data = d3.layout.histogram().bins(d3.range(0,bins + 1))(values)
-      var histogram = d3.select('#central-limit-therom-vis').select('svg')
-        .append('g')
-        .attr('transform','translate(' + margin.left + ',' + histogram_y + ')')
-
-      var xAxis = d3.svg.axis()
-        .scale(x)
-        .ticks(bins)
-        .orient('bottom')
-
-      var bar = histogram.selectAll('.bar')
-        .data(data)
-        .enter().append('g')
-          .attr('class', 'bar')
-
-      bar.append('rect')
-        .attr('x', 1)
-        .attr('width', x(data[0].dx) - 1)
-
-      bar.append('text')
-        .attr('dy', '.5em')
-        .attr('y', 10)
-        .attr('x', x(data[0].dx) / 2)
-        .attr('text-anchor', 'middle')
-
-      histogram.append('g')
-        .attr('class', 'x axis')
-        .attr('transform', 'translate(0,' + (histogram_height) + ')')
-        .call(xAxis)
-
-      function update(){
-        data = d3.layout.histogram().bins(d3.range(0, bins + 1))(values)
-        var bar = histogram.selectAll('.bar')
-        var y = d3.scale.linear()
-          .domain([0, d3.max(data.map(function(d){ return d.y }))])
-          .range([histogram_height, 0])
-        bar.data(data)
-          .transition()
-          .duration(speed)
-          .attr('transform', function(d){ return 'translate(' + x(d.x) + ',' + y(d.y) + ')' })
-          .select('rect')
-            .attr('height', function(d){ return (histogram_height - y(d.y)) })
-        bar.select('text')
-          .text(function(d){ return Math.floor(d.y / values.length * 100) + '%' })
-      }
-      update()
-    }
-    
-    ;(function interval(){
-      if(step) step()
-      setTimeout(interval, speed)
-    })()
-    
-    
-    // setup buttons
-    document.getElementsByName('speed')[0].onchange = function(e){
-      speed = e.target.value
-    }
-    document.getElementsByName('bins')[0].onchange = restart;
-    
-    function restart(e){
-      init(Number( e ? e.target.value : 5), Number(document.getElementById('central-limit-therom-vis').offsetWidth))
-    }
-    
-    restart()
-    
-  </script><h3><a href="/posts/central-limit-theorem.html">Central Limit Theorem Visualized in D3</a></h3>
+<p>You can find a copy of the code to this visualization here: <a href="bl.ocks.org/vicapow/5778069"><a href="http://bl.ocks.org/vicapow/5778069">http://bl.ocks.org/vicapow/5778069</a></a></p>
+<h2><a href="/posts/central-limit-theorem.html">Central Limit Theorem Visualized in D3</a></h2>
 <p>May 29, 2013</p>
+<iframe class="matchmysize" src="/experiments/central-limit-theorem.html"></iframe>
+
 <blockquote>
 <p>In probability theory, the central limit theorem (CLT) states that, given certain conditions, the mean of a sufficiently large number of independent random variables, each with a well-defined mean and well-defined variance, will be approximately normally distributed. </p>
 <p>-- <a href="http://en.wikipedia.org/wiki/Central_limit_theorem">Central Limit Theorem - Wikipedia</a></p>
@@ -423,10 +55,10 @@
 2: 25%</code></pre>
 <p>give it a try!</p>
 <p>note: this visualization was inspired by: <a href="http://vis.supstat.com/2013/04/bean-machine/"><a href="http://vis.supstat.com/2013/04/bean-machine/">http://vis.supstat.com/2013/04/bean-machine/</a></a></p>
-<h3><a href="/posts/test-your-javascript-skillz.html">Test Your Javascript Skillz</a></h3>
+<h2><a href="/posts/test-your-javascript-skillz.html">Test Your Javascript Skillz</a></h2>
 <p>May 25, 2013</p>
-<h2>Hoisting</h2>
-<h3>will it throw an error?</h3>
+<h3>Hoisting</h3>
+<h4>will it throw an error?</h4>
 <pre><code class="lang-js">foo()
 function foo(){
   console.log(&#39;foo&#39;)
@@ -455,7 +87,7 @@ console.log(nihao)</code></pre>
 <h4>answer</h4>
 <p>yes <code>ReferenceError: nihao is not defined</code></p>
 <hr>
-<h2>The Event Loop, Asynchronicity, And Closure Scope</h2>
+<h3>The Event Loop, Asynchronicity, And Closure Scope</h3>
 <h4>what is the entire output to the console after 100ms for the following code?</h4>
 <pre><code class="lang-js">var array = []
 for(var i = 0; i &lt; 5; i++){
@@ -537,7 +169,7 @@ foo(bar)</code></pre>
 <p><code>ReferenceError: hola is not defined</code></p>
 </blockquote>
 <hr>
-<h2>Automatic Semicolon Insertion</h2>
+<h3>Automatic Semicolon Insertion</h3>
 <h4>what is printed to the console?</h4>
 <pre><code class="lang-js">function foo(){
   return 
@@ -570,142 +202,22 @@ console.log( typeof foo() === &#39;undefined&#39;)</code></pre>
 ;(function(){ // comma
   console.log(&#39;bar&#39;)
 })()</code></pre>
-<style>
-  .graph{
-    width: 100%;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-  }
-  .bar { 
-    background-color: steelblue;
-    position: absolute;
-    border-left: 1px solid #fff;
-    margin-left: -1px;
-  }
-
-  .bar .bar-label {
-    font-size: 2em;
-    position: absolute;
-    color: #fff;
-    width: 30em;
-    left: -15em;
-    text-align: center;
-    background-color: none;
-  }
-
-  .bar .bar-label.x-axis{
-    font-size: 1.2em;
-  }
-
-  .reanchor {
-    position: absolute;
-    left: 50%;
-    width: 1px;
-    height: 1px;
-  }
-
-  .axis path, .axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-  }
-  #responsive-container{
-    width: 100%;
-    height: 500px;
-  }
-</style>
-<div id="responsive-container"></div>
-<script type='text/javascript'>
-  // inspired by: http://bl.ocks.org/mbostock/3048450
-  // dhm function from: http://stackoverflow.com/questions/8528382/javascript-show-milliseconds-as-dayshoursmins-without-seconds
-  function dhm(t){
-      var cd = 24 * 60 * 60 * 1000,
-          ch = 60 * 60 * 1000,
-          d = Math.floor(t / cd),
-          h = '0' + Math.floor( (t - d * cd) / ch),
-          m = '0' + Math.round( (t - d * cd - h * ch) / 60000);
-      return [d, h.substr(-2), m.substr(-2)].join(':');
-  }
-  d3.json('/examples/sleepdata.json', function(err, values){
-    if(err) throw err
-    // pluck only the sleep duration data
-    values = values.map(function(d){ return d.duration})
-    var formatCount = d3.format(',.0f');
-
-    var x = d3.scale.linear()
-      .domain([d3.min(values), d3.max(values)])
-      .range([0, 100]);
-
-    var data = d3.layout.histogram()
-      .bins(x.ticks(10))(values);
-    
-    // adjust the domain of the x axis
-    x.domain([data[0].x, data[data.length-1].x + data[data.length-1].dx])
-    
-    var y = d3.scale.linear()
-      .domain([0, d3.max(data, function(d){ return d.y; })])
-      .range([0, 100]);
-
-    var graph = d3.select('#responsive-container').append('div')
-      .attr('class', 'graph')
-
-    var bar = graph.selectAll('.bar')
-      .data(data)
-      .enter()
-        .append('div')
-          .attr('class', 'bar')
-          .style('width', (x(data[0].dx) - x(0)) + '%')
-          .style('height', function(d){ return y(d.y) + '%'; })
-          .style('left', function(d){ return x(d.x) + '%'; })
-          .style('bottom', '0')
-
-    // top label
-    bar.append('div')
-      .attr('class', 'reanchor')
-      .style('top', '0.5em')
-      .append('div')
-        .attr('class', 'bar-label')
-        .attr('x', (x(data[0].dx) - x(0)) / 2 )
-        .text(function(d){ return formatCount(d.y); })
-    
-    // bottom label
-    bar.append('div')
-      .attr('class', 'reanchor')
-      .style('bottom', '30px')
-      .append('div')
-        .attr('class', 'bar-label x-axis')
-        .attr('x', (x(data[0].dx) - x(0)) / 2 )
-        .text(function(d){ return dhm(d.x) + ' - ' + dhm(d.x + d.dx); })
-    
-    graph.append('p')
-      .style('text-align','right')
-      .style('font-size', '2em')
-      .text('my sleep duration. n = 50')
-    
-    // reset em's relative to the width of the document
-    function resize(){
-      console.log('resize')
-      var graph = document.getElementsByClassName('graph')[0]
-      graph.style.fontSize = (graph.offsetWidth / 75) + 'px';
-    }
-    window.onresize = resize
-    resize()
-  });
-</script><h3><a href="/posts/responsive-d3.html">Responsive D3</a></h3>
+<h2><a href="/posts/responsive-d3.html">Responsive D3</a></h2>
 <p>May 15, 2013</p>
+<iframe class="matchmysize" src="/experiments/responsive-d3.html"></iframe>
+
 <ul>
 <li><strong>note:</strong> Resize the page to see the effect</li>
 </ul>
-<h2>So what techniques make this possible?</h2>
-<h3>1. don&#39;t use svg!</h3>
+<h3>So what techniques make this possible?</h3>
+<h4>1. don&#39;t use svg!</h4>
 <p>  I know this seems to goes against idiomatic d3 but remember that d3 is</p>
 <blockquote>
 <p>...not a monolithic framework that seeks to provide every conceivable feature. Instead, D3 solves the crux of the problem: efficient manipulation of documents based on data. </p>
 </blockquote>
 <p>  And that&#39;s exactly what we&#39;re doing here except with non-svg DOM elements because of the lack of support for percentage based positioning of svg elements. (if you&#39;ve found a better technique, please let me know!) </p>
 <p>  <strong>update</strong>: After writing this blog post, I found an example that does achieve a similar effect with svg elements using the the <code>preserveAspectRatio=&quot;none&quot;</code> <code>&lt;svg&gt;</code> property in combination with <code>vector-effect: non-scaling-stroke</code> on <code>&lt;path&gt;</code> elements</p>
-<h3>2. use container divs</h3>
+<h4>2. use container divs</h4>
 <p>  A common pattern that I often see is trying to center align relative to a percentage distance from a parent element. for these cases, you can use an extra wrapper or container div</p>
 <pre><code class="lang-css">.label-container{
   width: 1px;
@@ -719,13 +231,13 @@ console.log( typeof foo() === &#39;undefined&#39;)</code></pre>
   left: -50px; /* half of the width */
   text-align: center;
 }</code></pre>
-<h3>3. Use &#39;em&#39; not &#39;px&#39; !</h3>
+<h4>3. Use &#39;em&#39; not &#39;px&#39; !</h4>
 <p>  This will allow text elements to resize automatically when the font-size of their parent element changes. Then, when the window resizes, you can update the font size of the parent element like so:</p>
 <pre><code class="lang-js">  window.onresize = function(){
     var graph = document.getElementsByClassName(&#39;graph&#39;)[0]
     graph.style.fontSize = (graph.offsetWidth / 75) + &#39;px&#39;
   }</code></pre>
-<h3><a href="/posts/when-semicolons-are-not-optional.html">When Semicolons Are Not Optional</a></h3>
+<h2><a href="/posts/when-semicolons-are-not-optional.html">When Semicolons Are Not Optional</a></h2>
 <p>May 15, 2013</p>
 <p>Use semicolons. But if you don&#39;t use semicolons, know when they&#39;re not optional.</p>
 <pre><code class="lang-js">// here we want to create a function and call it immediately
@@ -748,7 +260,7 @@ console.log( typeof foo() === &#39;undefined&#39;)</code></pre>
   console.log(msg)
 })(&#39;wow&#39;)</code></pre>
 <p>ahh.. much better! so basically, if you&#39;re not going to do anything with a result wrapped in parentheses, put a semicolon in front of it. that&#39;s it!</p>
-<h3><a href="/posts/technical-discrepancies-in-the-movie-oblivion.html">Technical Discrepancies In The Movie Oblivion (Spoiler Alert)</a></h3>
+<h2><a href="/posts/technical-discrepancies-in-the-movie-oblivion.html">Technical Discrepancies In The Movie Oblivion (Spoiler Alert)</a></h2>
 <p>April 27, 2013</p>
 <ol>
 <li><p>Why were the clones soulless when they first invaded the planet but not while working as drone repair people?</p>
@@ -776,7 +288,7 @@ console.log( typeof foo() === &#39;undefined&#39;)</code></pre>
 <li><p>Why didn&#39;t the repair ship have a black box recording all of Jack&#39;s activity?</p>
 </li>
 </ol>
-<h3><a href="/posts/fibonacci-in-rust.html">Fibonacci In Rust</a></h3>
+<h2><a href="/posts/fibonacci-in-rust.html">Fibonacci In Rust</a></h2>
 <p>April 14, 2013</p>
 <pre><code class="lang-rust">// (the slow, recursive way)
 
@@ -795,7 +307,7 @@ fn main() {
     n += 1;
   }
 }</code></pre>
-<h3><a href="/posts/what-do-i-want.html">What Do I Want?</a></h3>
+<h2><a href="/posts/what-do-i-want.html">What Do I Want?</a></h2>
 <p>January 2, 2013</p>
 <p>A while ago I was asked the question &quot;what do you want?&quot; it took me back. It wasn&#39;t something I really thought of much. So I took the time to write a few things down and a few days ago I came across that text file. here it is bellow:</p>
 <ul>
@@ -809,18 +321,18 @@ fn main() {
 </li>
 </ul>
 <p>glad to see my opinions haven&#39;t changed :)</p>
-<h3><a href="/posts/thoughts-on-the-movie-12-monkeys.html">Thoughts On The Movie &#39;12 Monkeys&#39;</a></h3>
+<h2><a href="/posts/thoughts-on-the-movie-12-monkeys.html">Thoughts On The Movie &#39;12 Monkeys&#39;</a></h2>
 <p>December 12, 2012</p>
 <p>I know I&#39;m a little late to the party but I just watched the movie 12 Monkeys and was so blown away, I was inspired enough to write down some of my thoughts. There was one scene in particular I couldn&#39;t wrap my head around; the final scene, when the woman scientist (astrophysicist) is seen on the plane next to the bio terrorist, she mentions she&#39;s &quot;in insurance.&quot;</p>
 <p>My first thought was that it was simply a coincidence. That she unknowingly sat next to the bio terrorist in the past. But she wasn&#39;t as young as she should have been as suggested in the age difference between young and old Cole. This small scene changes completely my original interpretation of the film because up until that point, it seemed Cole was very much unable to effect his past and that he was always destined to witness his own death. </p>
 <p>After some Googling, it turns out I wasn&#39;t the only one perplexed by this scene. One theory was that the past in the movie was in fact, changeable and the scientist on the plane was there to &quot;ensure&quot; the bio terrorist went through with his plain in light of Coles actions. I remained in disbelieve of this opinion until the commenter posted a link to the original script which describes Jose&#39;s reaction to hearing the details of the bio terrorist and what plane he&#39;s flying out of. The script reads specifically, &quot;JOSE, having heard this, steps back into the crowd as RAILLY grabs COLE and pulls him toward the Security Check Points.&quot; This means Jose was after that information from for the scientists so they could make sure he made it onto the plane! The scientists had no intent on changing the past and that the past, was actually changeable.</p>
 <p>Another scene in the movie that supports this theory is that in an early flashback to Cole&#39;s memory of the incident at the airport, Cole sees Jeffrey as the man with the ponytail and suitcase running for the gate, implying that Jeffrey may have been the original terrorist until the past was altered.</p>
-<h3><a href="/posts/the-appreciability-of-code-as-art.html">The <em>Appreciability</em> Of Code As Art</a></h3>
+<h2><a href="/posts/the-appreciability-of-code-as-art.html">The <em>Appreciability</em> Of Code As Art</a></h2>
 <p>December 02, 2012</p>
 <p>Code is art. If you google &quot;what is art?&quot; you get the following response</p>
 <p><em>&quot;The expression or application of human creative skill and imagination&quot;</em></p>
 <p>By this definition, code should rightfully be considered art but few self described artists give it this rightful designation. I thing this has to do with what I call codes lake of  &quot;appreciability.&quot; Take music as an example. It&#39;s fairly easy to argue that any one of Beethoven&#39;s works can be considered art. This is because it&#39;s easy for almost everyone (at some level) to appreciate music. You need no formal education to enjoy it. (Although, I&#39;m sure having a deeper understanding of music helps you to better appreciate the level of detail and mastery expressed in his work.) So with music, everyones born with the ability to appreciate it, only a few go on to master it. Programming is different, in that to appreciate it, you have to have mastered it (or at least be proficient at it.)</p>
-<h3><a href="/posts/im-dyslexic-and-i-program.html">I&#39;m Dyslexic And I Program</a></h3>
+<h2><a href="/posts/im-dyslexic-and-i-program.html">I&#39;m Dyslexic And I Program</a></h2>
 <p>November 18, 2012</p>
 <p>I&#39;m dyslexic. And no, that doesn&#39;t mean I read backwards. It also doesn&#39;t mean I&#39;m stupid. From wikipedia:</p>
 <p><em>&quot;Dyslexia is a brain-based type of learning disability that specifically impairs a person&#39;s ability to read. These individuals typically read at levels significantly lower than expected despite having normal intelligence.&quot; - National Institute of Neurological Disorders and Stroke</em></p>
@@ -830,7 +342,7 @@ fn main() {
 <p>Because of all the time I was spending trying to follow tutorials, my ability to read slowly improved. After I got to college and decided to major in Computer Engineer, a really great thing happened. Someone suggested a book for me to read. The book was called Outliers. It was the fastest I&#39;ve ever read a book and probably the first book I ever read that I truly  enjoyed reading. So I read Blink and The Tipping Point just as quickly after that. Somehow reading wasn&#39;t a struggle while reading those books. It was like riding a current down stream, instead of feeling like a fight upstream. I reached some sort of critical mass, where the enjoyment factor outweighed the choir.</p>
 <p>There&#39;s a lot of research in the area in neuroplasticity that suggests increasing remedial reading can offset the effects of dyslexia. Let me say that another way, reading more makes you less of a dyslexic. The prevailing wisdom on dyslexia up until recently has basically been if you got it your stuck with it. Which makes sense, since the one thing dyslexics don&#39;t want to do its read more so they never improve.</p>
 <p>It seems more and more that reading and writing is like the internet itself and being better at both is analoges to improving your download and upload bandwidth. I feel very strongly that reading and writing on the web isn&#39;t just a fad. It&#39;s going to be the primary communication protocol for us humans on the internet for a very long time to come. It should be our priority, as a society, to teach the fundamentals of communication above all else in school. As long as kids are able to communicate, they&#39;ll gravitate toward their interests and fields of choice on their own teaching themselves along the way.</p>
-<h3><a href="/posts/zookeeper-node-part-2.html">Zookeeper with node.JS on OS X - Part 2: Setting up the Node.JS Client</a></h3>
+<h2><a href="/posts/zookeeper-node-part-2.html">Zookeeper with node.JS on OS X - Part 2: Setting up the Node.JS Client</a></h2>
 <p>July 16, 2012</p>
 <p>At first I thought node-zookeeper was the best module out there for working with zk and node but the API is gross. I was glad to find out I wasn&#39;t alone. <a href="https://github.com/mcavage">Mark Cavage</a> from Joyent was kind enough to write a wrapper around it that makes it feel more like the native node file system api. You can find it here: <a href="https://github.com/mcavage/node-zkplus">https://github.com/mcavage/node-zkplus</a> or just install it via npm.</p>
 <pre><code>  npm install zkplus</code></pre>
@@ -854,7 +366,7 @@ client.on(&#39;connect&#39;, function () {
     });
   });
 });</code></pre>
-<h3><a href="/posts/zookeeper-node-part-1.html">Zookeeper with node.JS on OS X - Part 1: Installing Zookeeper</a></h3>
+<h2><a href="/posts/zookeeper-node-part-1.html">Zookeeper with node.JS on OS X - Part 1: Installing Zookeeper</a></h2>
 <p>July 16, 2012</p>
 <p>To get started, you&#39;ll need to install zookeeper. I&#39;ll assume you&#39;re using OS X. In which case, you can install zookeeper via home brew.</p>
 <pre><code>brew install zookeeper</code></pre>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <style>
+      body {
+        font-family: 'Droid Sans', sans-serif;
+        font-size: 18px;
+      }
+      .graph{
+        width: 100%;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+      }
+      .bar { 
+        background-color: steelblue;
+        position: absolute;
+        border-left: 1px solid #fff;
+        margin-left: -1px;
+      }
+
+      .bar .bar-label {
+        font-size: 2em;
+        position: absolute;
+        color: #fff;
+        width: 30em;
+        left: -15em;
+        text-align: center;
+        background-color: none;
+      }
+
+      .bar .bar-label.x-axis{
+        font-size: 1.2em;
+      }
+
+      .reanchor {
+        position: absolute;
+        left: 50%;
+        width: 1px;
+        height: 1px;
+      }
+
+      .axis path, .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
+      #responsive-container{
+        width: 100%;
+        height: 500px;
+      }
+    </style>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <div id="responsive-container"></div>
+    <script type='text/javascript'>
+      // inspired by: http://bl.ocks.org/mbostock/3048450
+      // dhm function from: http://stackoverflow.com/questions/8528382/javascript-show-milliseconds-as-dayshoursmins-without-seconds
+      function dhm(t){
+          var cd = 24 * 60 * 60 * 1000,
+              ch = 60 * 60 * 1000,
+              d = Math.floor(t / cd),
+              h = '0' + Math.floor( (t - d * cd) / ch),
+              m = '0' + Math.round( (t - d * cd - h * ch) / 60000);
+          return [d, h.substr(-2), m.substr(-2)].join(':');
+      }
+      d3.json('/examples/sleepdata.json', function(err, values){
+        if(err) throw err
+        // pluck only the sleep duration data
+        values = values.map(function(d){ return d.duration})
+        var formatCount = d3.format(',.0f');
+
+        var x = d3.scale.linear()
+          .domain([d3.min(values), d3.max(values)])
+          .range([0, 100]);
+
+        var data = d3.layout.histogram()
+          .bins(x.ticks(10))(values);
+    
+        // adjust the domain of the x axis
+        x.domain([data[0].x, data[data.length-1].x + data[data.length-1].dx])
+    
+        var y = d3.scale.linear()
+          .domain([0, d3.max(data, function(d){ return d.y; })])
+          .range([0, 100]);
+
+        var graph = d3.select('#responsive-container').append('div')
+          .attr('class', 'graph')
+
+        var bar = graph.selectAll('.bar')
+          .data(data)
+          .enter()
+            .append('div')
+              .attr('class', 'bar')
+              .style('width', (x(data[0].dx) - x(0)) + '%')
+              .style('height', function(d){ return y(d.y) + '%'; })
+              .style('left', function(d){ return x(d.x) + '%'; })
+              .style('bottom', '0')
+
+        // top label
+        bar.append('div')
+          .attr('class', 'reanchor')
+          .style('top', '0.5em')
+          .append('div')
+            .attr('class', 'bar-label')
+            .attr('x', (x(data[0].dx) - x(0)) / 2 )
+            .text(function(d){ return formatCount(d.y); })
+    
+        // bottom label
+        bar.append('div')
+          .attr('class', 'reanchor')
+          .style('bottom', '30px')
+          .append('div')
+            .attr('class', 'bar-label x-axis')
+            .attr('x', (x(data[0].dx) - x(0)) / 2 )
+            .text(function(d){ return dhm(d.x) + ' - ' + dhm(d.x + d.dx); })
+    
+        graph.append('p')
+          .style('text-align','right')
+          .style('font-size', '2em')
+          .text('my sleep duration. n = 50')
+    
+        // reset em's relative to the width of the document
+        function resize(){
+          console.log('resize')
+          var graph = document.getElementsByClassName('graph')[0]
+          graph.style.fontSize = (graph.offsetWidth / 75) + 'px';
+        }
+        window.onresize = resize
+        resize()
+      });
+    </script>
+  </body>
+</html>

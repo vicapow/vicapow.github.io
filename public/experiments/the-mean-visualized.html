@@ -2,6 +2,10 @@
 <html>
   <body>
     <style type="text/css">
+      body {
+        font-family: 'Droid Sans', sans-serif;
+        font-size: 18px;
+      }
       #the-mean-visualization {
         font: 10px sans-serif;
       }
@@ -58,7 +62,7 @@
     <button id="remove-all"> remove all but one </button>
     <div id="the-mean-visualization"></div>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script type="text/javascript">
+    <script type="application/javascript">
       var container = d3.select('#the-mean-visualization')
         var margin = { left : 40, top : 10, right : 40 }
         , w = window.getComputedStyle(container.node()).width.slice(0,-2) - margin.left - margin.right

@@ -1,4 +1,4 @@
-### [Zookeeper with node.JS on OS X - Part 1: Installing Zookeeper](/posts/zookeeper-node-part-1.html)
+## [Zookeeper with node.JS on OS X - Part 1: Installing Zookeeper](/posts/zookeeper-node-part-1.html)
 July 16, 2012
 
 To get started, you'll need to install zookeeper. I'll assume you're using OS X. In which case, you can install zookeeper via home brew.

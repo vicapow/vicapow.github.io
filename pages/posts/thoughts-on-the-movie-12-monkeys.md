@@ -1,4 +1,4 @@
-### [Thoughts On The Movie '12 Monkeys'](/posts/thoughts-on-the-movie-12-monkeys.html)
+## [Thoughts On The Movie '12 Monkeys'](/posts/thoughts-on-the-movie-12-monkeys.html)
 December 12, 2012
 
 I know I'm a little late to the party but I just watched the movie 12 Monkeys and was so blown away, I was inspired enough to write down some of my thoughts. There was one scene in particular I couldn't wrap my head around; the final scene, when the woman scientist (astrophysicist) is seen on the plane next to the bio terrorist, she mentions she's "in insurance."

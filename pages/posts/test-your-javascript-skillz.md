@@ -1,10 +1,10 @@
-### [Test Your Javascript Skillz](/posts/test-your-javascript-skillz.html)
+## [Test Your Javascript Skillz](/posts/test-your-javascript-skillz.html)
 May 25, 2013
 
 
-## Hoisting
+### Hoisting
 
-### will it throw an error?
+#### will it throw an error?
 
 ````js
 foo()
@@ -50,7 +50,7 @@ console.log(nihao)
 yes `ReferenceError: nihao is not defined`
 ________________________________________________________________________________
 
-## The Event Loop, Asynchronicity, And Closure Scope
+### The Event Loop, Asynchronicity, And Closure Scope
 
 #### what is the entire output to the console after 100ms for the following code?
 
@@ -153,7 +153,7 @@ foo(bar)
 > `ReferenceError: hola is not defined`
 
 ________________________________________________________________________________
-## Automatic Semicolon Insertion
+### Automatic Semicolon Insertion
 
 #### what is printed to the console?
 

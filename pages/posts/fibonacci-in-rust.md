@@ -1,4 +1,4 @@
-### [Fibonacci In Rust](/posts/fibonacci-in-rust.html)
+## [Fibonacci In Rust](/posts/fibonacci-in-rust.html)
 April 14, 2013
 
 ````rust

@@ -1,4 +1,4 @@
-### [The _Appreciability_ Of Code As Art](/posts/the-appreciability-of-code-as-art.html)
+## [The _Appreciability_ Of Code As Art](/posts/the-appreciability-of-code-as-art.html)
 December 02, 2012
 
 Code is art. If you google "what is art?" you get the following response

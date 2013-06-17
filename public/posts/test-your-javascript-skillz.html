@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>
   </head>
   <body>
@@ -15,10 +16,10 @@
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 </div>
       <div class="post-body">
-        <div class="container"><h3><a href="/posts/test-your-javascript-skillz.html">Test Your Javascript Skillz</a></h3>
+        <div class="container"><h2><a href="/posts/test-your-javascript-skillz.html">Test Your Javascript Skillz</a></h2>
 <p>May 25, 2013</p>
-<h2>Hoisting</h2>
-<h3>will it throw an error?</h3>
+<h3>Hoisting</h3>
+<h4>will it throw an error?</h4>
 <pre><code class="lang-js">foo()
 function foo(){
   console.log(&#39;foo&#39;)
@@ -47,7 +48,7 @@ console.log(nihao)</code></pre>
 <h4>answer</h4>
 <p>yes <code>ReferenceError: nihao is not defined</code></p>
 <hr>
-<h2>The Event Loop, Asynchronicity, And Closure Scope</h2>
+<h3>The Event Loop, Asynchronicity, And Closure Scope</h3>
 <h4>what is the entire output to the console after 100ms for the following code?</h4>
 <pre><code class="lang-js">var array = []
 for(var i = 0; i &lt; 5; i++){
@@ -129,7 +130,7 @@ foo(bar)</code></pre>
 <p><code>ReferenceError: hola is not defined</code></p>
 </blockquote>
 <hr>
-<h2>Automatic Semicolon Insertion</h2>
+<h3>Automatic Semicolon Insertion</h3>
 <h4>what is printed to the console?</h4>
 <pre><code class="lang-js">function foo(){
   return 

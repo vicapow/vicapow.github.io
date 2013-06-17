@@ -1,4 +1,4 @@
-### [When Semicolons Are Not Optional](/posts/when-semicolons-are-not-optional.html)
+## [When Semicolons Are Not Optional](/posts/when-semicolons-are-not-optional.html)
 May 15, 2013
 
 Use semicolons. But if you don't use semicolons, know when they're not optional.

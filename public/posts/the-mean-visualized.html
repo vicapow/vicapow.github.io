@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
     <script src="http://d3js.org/d3.v3.min.js"></script>
   </head>
   <body>
@@ -15,176 +16,15 @@
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 </div>
       <div class="post-body">
-        <div class="container">
-<style type="text/css">
-  #the-mean-visualization {
-    font: 10px sans-serif;
-  }
-  #the-mean-visualization .ball{
-    fill: steelblue;
-    opacity: 1;
-    box-shadow: -5px -5px 5px #888;
-    -webkit-box-shadow: -5px -5px 5px #888;
-    stroke: #fff;
-    opacity: 1;
-  }
-
-  #the-mean-visualization .ball.mean{
-    fill: #ff6d00;
-    fill: #ffb958;
-  }
-
-  #the-mean-visualization .axis path, #the-mean-visualization .axis line {
-    fill: none;
-    stroke: #000;
-    shape-rendering: crispEdges;
-  }
-
-  #the-mean-visualization .ball-group .btn-close .btn-bg{
-    fill: black;
-    opacity: 1;
-  }
-  
-  #the-mean-visualization .ball-group .btn-close text{
-    fill: white;
-  }
-
-  #the-mean-visualization .ball-group .btn-close{
-    opacity: 0;
-    transition: all 0.1s;
-  }
-
-  #the-mean-visualization .ball-group:hover .btn-close{
-    opacity: 1;
-    cursor: pointer;
-  }
-
-  #the-mean-visualization .ball-group:active .btn-close{
-    display: none;
-    opacity: 0;
-  }
-  
-  #the-mean-visualization .ball-group:active .btn-close:active{
-    display: block;
-    opacity: 1;
-  }
-</style>
-<button id="add-ball"> add ball </button>
-<button id="remove-all"> remove all but one </button>
-<div id="the-mean-visualization"></div>
-<script type="application/javascript">
-  var container = d3.select('#the-mean-visualization')
-    var margin = { left : 40, top : 10, right : 40 }
-    , w = window.getComputedStyle(container.node()).width.slice(0,-2) - margin.left - margin.right
-    , h = 100
-    , svg = container.append('svg')
-      .attr('width', w + margin.left + margin.right)
-      .attr('height', h * 2)
-      .append('g')
-        .attr('transform'
-        , 'translate(' + margin.left + ',' + margin.top + ')')
-    
-    , x = d3.scale.linear().domain([0, 100]).range([0, w])
-    , y = d3.scale.linear().domain([10, 0]).range([0, h])
-    , r = 20
-    , data = d3.range(0, 4).map(function(d){ return { x : 20 + d * 20, y: 2} })
-  
-    , drag = d3.behavior.drag()
-      .on('drag', dragmove)
-      .on('dragend', dragend)
-  
-    , circles = svg.selectAll('.ball-group')
-  
-    , meanball = svg.append('circle')
-      .attr('class', 'ball mean')
-      .attr('r', r * 2)
-      .attr('cx', function(d){ return x(100) })
-      .attr('cy', function(d){ return y(2) })
-  
-  function setupCircles(){
-    d3.selectAll('.ball-group').remove()
-    var d = circles.data(data)
-    d.exit().remove()
-    var g = d.enter()
-        .append('g')
-        .attr('class', 'ball-group')
-        .attr('transform', function(d){
-          return 'translate(' + x(d.x) + ',' + y(d.y) + ')'
-        })
-        .call(drag)
-    g.append('circle')
-      .attr('class', 'ball')
-      .attr('r', r)
-    var btn = g.append('g')
-      .attr('class', 'btn-close')
-      .attr('transform', 'translate(15,-15)')
-    var bg = btn.append('circle')
-      .attr('class', 'btn-bg')
-      .attr('r', '10')
-    btn.append('text')
-        .text('x')
-        .attr('font-size', '2em')
-        .attr('font-family', 'helvetica')
-        .attr('x', -5)
-        .attr('y', 5)
-    btn.on('click', function(d){
-      if(data.length <= 1) return
-      data.splice(data.indexOf(d),1)
-      setupCircles()
-      updateMean()
-    })
-  }
-  
-  setupCircles()
-  
-  function dragmove(d){
-    d.x += x.invert(d3.event.dx)
-    if(d.x > x.invert(w)) d.x = x.invert(w)
-    if(d.x < x.invert(0)) d.x = x.invert(0)
-    d3.select(this)
-      .attr('transform', function(d){
-        return 'translate(' + x(d.x) + ',' + y(d.y) + ')'
-      })
-    updateMean()
-  }
-  
-  function dragend(d){
-    d.x = Math.round(d.x)
-    d3.select(this)
-      .attr('cx', x(d.x))
-    updateMean()
-  }
-  
-  var axis = d3.svg.axis().scale(x).orient("bottom")
-  svg.append('g')
-    .attr('class', 'x axis')
-    .attr('transform', 'translate(0,' + h + ')')
-    .call(axis)
-  
-  function updateMean(){
-    var set = data.map( function(d){ return d.x } )
-    meanball.attr('cx', x( d3.mean( set ) ) )
-  }
-  
-  updateMean()
-  
-  document.getElementById('add-ball').onclick = function(){
-    data.push({ x : Math.random() * x.invert(w), y : 2})
-    setupCircles()
-    updateMean()
-  }
-  document.getElementById('remove-all').onclick = function(){
-    data = [{ x : 50 , y : 2 }]
-    setupCircles()
-    updateMean()
-  }
-</script><h3><a href="/posts/the-mean-visualized.html">The Mean Visualized</a></h3>
+        <div class="container"><h2><a href="/posts/the-mean-visualized.html">The Mean Visualized</a></h2>
 <p>June 13th, 2013</p>
+<iframe class="matchmysize" src="/experiments/the-mean-visualized.html"></iframe>
+
 <p>This is a simple visualization of the Arithmetic mean (aka, the average.) <em>Click</em> and <em>drag</em> the balls around and watch the mean (the larger yellow ball) update.</p>
 <p>The mean is often used to describe the central tendency of a set of data values. It&#39;s one possible answer to the question &quot;what is a typical value for the data set?&quot;</p>
 <p>It&#39;s important to remember that the mean is not a <code>robust statistic</code> meaning that outliers will have a large effect on the mean. You can see this in the visualization by adding several balls to one side in a concentrated area and then adding a single ball to the opposite side.</p>
 <p>Note that the size of the balls are meaningless in the visualization. They&#39;re only large enough to be clicked on. The mean ball has twice the radius of the others only so you can still see it when the other balls are in front of it.</p>
-<p>You can find the code to this visualization here: <a href="bl.ocks.org/vicapow/5778069"><a href="http://bl.ocks.org/vicapow/5778069">http://bl.ocks.org/vicapow/5778069</a></a></p>
+<p>You can find a copy of the code to this visualization here: <a href="bl.ocks.org/vicapow/5778069"><a href="http://bl.ocks.org/vicapow/5778069">http://bl.ocks.org/vicapow/5778069</a></a></p>
 
         </div>
         <div class="clear"></div>

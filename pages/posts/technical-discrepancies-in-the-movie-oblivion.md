@@ -1,4 +1,4 @@
-### [Technical Discrepancies In The Movie Oblivion (Spoiler Alert)](/posts/technical-discrepancies-in-the-movie-oblivion.html)
+## [Technical Discrepancies In The Movie Oblivion (Spoiler Alert)](/posts/technical-discrepancies-in-the-movie-oblivion.html)
 April 27, 2013
 
 1. Why were the clones soulless when they first invaded the planet but not while working as drone repair people?

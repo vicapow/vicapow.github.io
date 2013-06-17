@@ -32,3 +32,8 @@ p{
 .clear{
   clear: both;
 }
+
+iframe{
+  border: none;
+  width: 100%;
+}

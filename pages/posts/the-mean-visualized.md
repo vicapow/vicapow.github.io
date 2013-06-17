@@ -1,5 +1,7 @@
-### [The Mean Visualized](/posts/the-mean-visualized.html)
+## [The Mean Visualized](/posts/the-mean-visualized.html)
 June 13th, 2013
+
+<iframe class="matchmysize" src="/experiments/the-mean-visualized.html"></iframe>
 
 This is a simple visualization of the Arithmetic mean (aka, the average.) _Click_ and _drag_ the balls around and watch the mean (the larger yellow ball) update.
 
