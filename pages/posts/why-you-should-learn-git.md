@@ -13,7 +13,7 @@ Back in April of 2012, Twitter also put their employee patent agreement, the [In
 
 The really amazing thing about all of this is that if you or I feel inclined, we can easily contribute to these works via what's called `forking` followed by a `pull request`. `Forking` allows you to have your very own version of these documents that you can edit and change in anyway you like. A `pull request` allows you to recommend your changes back to the original authors essentially saying "hey! how about you accept this change I made back into your version of the project?"
 
-This blog is even version controlled with git. [Fork it and fix my typos!](https://github.com/vicapow/vicapow.github.io)
+This blog is even version controlled with git. [Fork it and fix my typos!](https://github.com/vicapow/vicapow.github.io/blob/master/pages/posts/why-you-should-learn-git.md)
 
 To learn more about how to use git from the command line, you can checkout Github's excellent tutorial at [try.github.io](http://try.github.io/) or in most cases, you can get by just using Github's web interface.
 
