@@ -19,7 +19,68 @@
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 </div>
         </div>
-      </div><h2><a href="/posts/why-you-should-learn-git.html">Why You Should Learn Git Even If You Don&#39;t Program (Yet)</a></h2>
+      </div><h3><a href="/posts/what-is-this.html">What is this?</a></h3>
+<p>Context is one of the most complicated things for people just starting out learning Javascript to wrap their brains around. Even if you&#39;ve been programming in JS for a while, you may often run into bugs related to context. In this post, I&#39;m going to do my best to explain context with as many examples and as few words as possible. Here goes!</p>
+<p>First off, what is it? Well, before we talk about context, you need to make sure you understand how scope works.</p>
+<pre><code class="lang-js">var a = 10;
+var foo = function(a){
+  console.log(a);
+};
+foo(20); // prints `20`
+console.log(a); // prints `10`</code></pre>
+<p>what if I want to print the outer <code>a</code> in foo? well, we can either rename <code>a</code> outside of <code>foo</code> or rename <code>a</code> inside of <code>foo</code>.</p>
+<pre><code class="lang-js">var a = 10;
+var foo = function(b){
+  console.log(a);
+  console.log(b);
+};
+foo(20); // prints `10` then `20`
+console.log(a); // prints `10`</code></pre>
+<p>Now for context. You can think of the context of a function as an additional, hidden argument called <code>this</code> which is by default, the <code>window</code> object in the browser.</p>
+<pre><code class="lang-js">console.log(this === window); // prints `true`
+var foo = function(){
+  console.log(this);
+};
+foo(); // prints the `window` object to the console</code></pre>
+<p>However, we can change this <code>this</code> hidden argument, (aka, the context), if we call a function with a variable to the left of the dot.</p>
+<pre><code class="lang-js">var a = {};
+a.foo = function(){
+  console.log(this);
+};
+
+a.foo(); // prints the `a` object to the console</code></pre>
+<p>notice how in the following example we&#39;re <em>not</em> calling <code>f</code> with an object to the left of the dot?</p>
+<pre><code class="lang-js">var f = a.foo;
+console.log(f === a.foo); // prints `true`
+f(); // prints the `window` object to the console</code></pre>
+<p>Another way in which a function can be called with a different context is by using <code>call</code> or <code>apply</code> With these functions we an explicitly set the context to whatever we want.</p>
+<pre><code class="lang-js">var f = function(){
+  console.log(this);
+}
+var a = { foo : &#39;bar&#39; }
+f(); // prints `window` to the console
+f.call(a); // prints `{ foo : &#39;bar&#39;}` to the console
+f.apply(a); // prints `{ foo : &#39;bar&#39;}` to the console</code></pre>
+<p>The only difference between <code>call</code> and <code>apply</code> is that <code>call</code> can take an unlimited number of additional arguments that will get passed to the function to be called. Similarly, <code>apply</code> optional takes an array of arguments as a second argument.</p>
+<pre><code class="lang-js">f.call(theContext, arg1, arg2, arg3, ...);
+f.apply(theContext, [arg1, arg2, arg3, ...]);</code></pre>
+<p>The most common issue people run into with context is when passing a function as a call to some other function that doesn&#39;t take an additional context argument. <code>setTimeout</code> is a great example.</p>
+<pre><code class="lang-js">var a = {
+  foo : function(){
+    console.log(this);
+  }
+};
+setTimeout(a.foo, 1000); // will print `window` to the console after 1 second. WTF?!?</code></pre>
+<p>the expression <code>a.foo</code> <em>returns</em> a function, it doesn&#39;t <em>call</em> a function in a particular context. When <code>setTimeout</code> actually calls the function it gets, it doesn&#39;t call it with any context so it defaults to the <code>window</code> object. Well crap. How can we make sure our function gets called in the right context? Magic. More specifically, the magic of closures.</p>
+<pre><code class="lang-js">var a = {
+  foo : function(){
+    console.log(this);
+  }
+};
+setTimeout(function(){
+  a.foo();
+}, 1000); // will print the object `a` to the console</code></pre>
+<h2><a href="/posts/why-you-should-learn-git.html">Why You Should Learn Git Even If You Don&#39;t Program (Yet)</a></h2>
 <p>Jun 20, 2013</p>
 <p>Git is an amazing tool for collaborating. Because it started as the version control mechanism for managing the Linux kernel, it&#39;s most often associated with large programming projects, and few people outside (and probably inside) the development community realize its applicability in other areas. </p>
 <p>But that&#39;s changing. For example, a group of about twenty mathematics professors recently put together <a href="http://homotopytypetheory.org/book/">a textbook</a> on &#39;Homotopy Type Theory&#39; using git in combination with an online tool called <a href="https://github.com/HoTT/book">Github</a>.  Passing around word documents, images, and equations might have worked for a team of two, but with more team members, the communication channels became too complicated for email. Git was the glue that made the collaboration possible. You can watch a video of the team&#39;s collaboration in <a href="http://vimeo.com/68761218">this video</a>.</p>

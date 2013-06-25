@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> a blog by victor powell</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" href="/css/main.css?v1">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+  </head>
+  <body>
+    <div class="container"><br><a href="/">back</a><div style="float:right">
+  <a href="https://twitter.com/vicapow" class="twitter-follow-button" data-show-count="false">Follow @vicapow</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+</div>
+      <div class="post-body"><h3><a href="/posts/what-is-this.html">What is this?</a></h3>
+<p>Context is one of the most complicated things for people just starting out learning Javascript to wrap their brains around. Even if you&#39;ve been programming in JS for a while, you may often run into bugs related to context. In this post, I&#39;m going to do my best to explain context with as many examples and as few words as possible. Here goes!</p>
+<p>First off, what is it? Well, before we talk about context, you need to make sure you understand how scope works.</p>
+<pre><code class="lang-js">var a = 10;
+var foo = function(a){
+  console.log(a);
+};
+foo(20); // prints `20`
+console.log(a); // prints `10`</code></pre>
+<p>what if I want to print the outer <code>a</code> in foo? well, we can either rename <code>a</code> outside of <code>foo</code> or rename <code>a</code> inside of <code>foo</code>.</p>
+<pre><code class="lang-js">var a = 10;
+var foo = function(b){
+  console.log(a);
+  console.log(b);
+};
+foo(20); // prints `10` then `20`
+console.log(a); // prints `10`</code></pre>
+<p>Now for context. You can think of the context of a function as an additional, hidden argument called <code>this</code> which is by default, the <code>window</code> object in the browser.</p>
+<pre><code class="lang-js">console.log(this === window); // prints `true`
+var foo = function(){
+  console.log(this);
+};
+foo(); // prints the `window` object to the console</code></pre>
+<p>However, we can change this <code>this</code> hidden argument, (aka, the context), if we call a function with a variable to the left of the dot.</p>
+<pre><code class="lang-js">var a = {};
+a.foo = function(){
+  console.log(this);
+};
+
+a.foo(); // prints the `a` object to the console</code></pre>
+<p>notice how in the following example we&#39;re <em>not</em> calling <code>f</code> with an object to the left of the dot?</p>
+<pre><code class="lang-js">var f = a.foo;
+console.log(f === a.foo); // prints `true`
+f(); // prints the `window` object to the console</code></pre>
+<p>Another way in which a function can be called with a different context is by using <code>call</code> or <code>apply</code> With these functions we an explicitly set the context to whatever we want.</p>
+<pre><code class="lang-js">var f = function(){
+  console.log(this);
+}
+var a = { foo : &#39;bar&#39; }
+f(); // prints `window` to the console
+f.call(a); // prints `{ foo : &#39;bar&#39;}` to the console
+f.apply(a); // prints `{ foo : &#39;bar&#39;}` to the console</code></pre>
+<p>The only difference between <code>call</code> and <code>apply</code> is that <code>call</code> can take an unlimited number of additional arguments that will get passed to the function to be called. Similarly, <code>apply</code> optional takes an array of arguments as a second argument.</p>
+<pre><code class="lang-js">f.call(theContext, arg1, arg2, arg3, ...);
+f.apply(theContext, [arg1, arg2, arg3, ...]);</code></pre>
+<p>The most common issue people run into with context is when passing a function as a call to some other function that doesn&#39;t take an additional context argument. <code>setTimeout</code> is a great example.</p>
+<pre><code class="lang-js">var a = {
+  foo : function(){
+    console.log(this);
+  }
+};
+setTimeout(a.foo, 1000); // will print `window` to the console after 1 second. WTF?!?</code></pre>
+<p>the expression <code>a.foo</code> <em>returns</em> a function, it doesn&#39;t <em>call</em> a function in a particular context. When <code>setTimeout</code> actually calls the function it gets, it doesn&#39;t call it with any context so it defaults to the <code>window</code> object. Well crap. How can we make sure our function gets called in the right context? Magic. More specifically, the magic of closures.</p>
+<pre><code class="lang-js">var a = {
+  foo : function(){
+    console.log(this);
+  }
+};
+setTimeout(function(){
+  a.foo();
+}, 1000); // will print the object `a` to the console</code></pre>
+
+        <div class="clear"></div>
+      </div><br>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        /* CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE */
+        var disqus_shortname = 'vicapow'; // required: replace example with your forum shortname
+        /* DON'T EDIT BELOW THIS LINE */
+        (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the comments</noscript><a href="/">back</a>
+    </div>
+    <!-- - apply code highlighting-->
+    <script src="/js/main.js?v1"></script><script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-39250901-2']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+  </body>
+</html>
