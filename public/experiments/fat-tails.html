@@ -6,45 +6,65 @@
     <style>
       
        body {
-            font: 10px sans-serif;
-          }
+         font: 11px sans-serif;
+       }
 
-          .bar rect {
-            fill: steelblue;
-            shape-rendering: crispEdges;
-          }
-
-          .bar text {
-            fill: #fff;
-          }
-
-          .axis path, .axis line {
-            fill: none;
-            stroke: #000;
-            shape-rendering: crispEdges;
-          }
-
-        .market .y.axis .tick.major line {
-          stroke: #000;
-          stroke-dasharray: 2,2;
-          }
-
-      div.tooltip {   
-        position: absolute;           
-        text-align: center;  
-        opacity: 0.5;         
-        width: 60px;                  
-        height: 28px;                 
-        padding: 2px;             
-        font: 12px sans-serif;        
-        background: lightsteelblue;   
-        border: 0px;      
-        border-radius: 8px;           
-        pointer-events: none;         
+      .bar rect {
+        fill: steelblue;
+        shape-rendering: crispEdges;
       }
 
-      div.tooltip text {   
-        margin-top: 5px;       
+      .bar text {
+        fill: #fff;
+      }
+
+      .axis path, .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
+
+      .y.axis .tick.major line {
+        stroke: #000;
+        stroke-dasharray: 2,2;
+      }
+
+      .zero{
+        stroke: #000;
+        stroke-width: 1.5px;
+      }
+
+      .sdBox{
+        fill: steelblue;
+        opacity: 0.4;
+        stroke: none;
+      }
+
+      .sliderLabel {
+        font-size: 15px;
+      }
+
+      .bigLabel {
+        font-size: 25px;
+        font: serif;
+      }
+
+      div.tooltip {
+        position: absolute;
+        text-align: center;
+        opacity: 0.5;
+        width: 60px;
+        height: 28px;
+        padding: 2px;
+        font: 12px sans-serif;
+        background: lightsteelblue;
+        border: 0px;
+        border-radius: 8px;
+        pointer-events: none;
+      }
+
+      div.tooltip text {
+        margin-top: 5px;
       }
 
       #aslider{
@@ -53,27 +73,82 @@
         left: 700px;
         top: 100px;
       }
-      
+
       html, body{
         margin: 0;
       }
+
       .p-value-slider path, .p-value-slider line{
         fill: none;
         stroke: #000;
         shape-rendering: crispEdges;
       }
+
       .p-value-slider .handle{
         fill: #555;
         stroke: #000;
         r: 10px;
         cursor: pointer;
       }
+
       .frame{
-        width: 100%;
+        width: 1000px;
       }
+
+      .columns{
+        margin-top: 25px;
+        font-size: 12px;
+        margin-left: 100px;
+        width: 800px;
+      }
+
+      .columns .column {
+        position: relative;
+        width: 46%;
+        padding: 1%;
+      }
+
+       .columns .left {
+          float: left;
+      }
+
+      .columns .right {
+          float: right;
+      }
+
     </style>
   </head>
   <body>
+
+    <div class = "columns">
+    <h1>Normal vs. Fat-tailed</h1>
+    <div class = "left column">
+      <h3> Normal</h3>
+    <p>A normal distribution varies a lot in the neighborhood of its average, but produces few examples beyond three standard deviations from that average.</p>
+
+    <p>Normal distributions are common in biology. Human height, for example: men average 5' 10," and their population has a standard deviation of 4". That means the chance of a man exceeding eight feet (6.5 standard deviations from the average) is astronomically small. And, in point of fact, among the billions of men ever measured, only about 20 have stood over eight feet. </p>
+      <h3> Fat-tailed</h3>
+    <p>A fat-tailed distribution looks normal but the parts far away from the average are thicker, meaning a higher chance of huge deviations.</p>
+
+    <p>Fat-tailed distributions are common in society. Since I love documentaries, click here to see how the top three highest-grossing documentaries earned dozens of times what any others did. If earnings were normal, these films would be like fifty-foot men. In fact, a single person, Michael Moore, made three of the top ten!</p>
+    </div>
+
+    <div class = "right column">
+      <h3>Don't get confused</h3>
+    <p>Fat tails don't mean <em>more</em> variance; just <em>weird</em> variance. For a given variance, a higher chance of extreme deviations implies a lower chance of medium ones. To paraphrase Nicholas Nassim Taleb:</p>
+
+    <p style="margin-left: 10px;"><i>The normal distribution spends 68% of the time within one standard deviation of its mean. If finance has fat tails, how much time do stocks spend within one standard deviation? </i></p>
+
+   <p style="margin-left: 10px;"><i> Everyone answers: 'Less than 68%! Fat tails mean more deviation.' They're wrong: stock prices spend between 78% and 98% of their time within one standard deviation of the mean. </i></p>
+
+      <h3>Illustration</h3>
+    <p>Both distributions below have variance of 1, but the left is fat-tailed and the right is normal. The slider changes the fat-tailedness of the left (measured as 'kurtosis') while keeping its variance at 1. As you fatten the tails, the middle bunches up to put a lid on the variance.</p>
+    <p>The line plots show time-series samples. Look how the fat-tailed series spends stays near the average, but it sometimes goes above 5 or below -5. The normal never does that.</p>
+    </div>
+
+    </div>
+    </div>
+
     <div class="frame" id="frame"></div>
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script type="text/javascript">
@@ -89,12 +164,12 @@
         // A formatter for counts.
         , formatCount = d3.format(",.0f")
         , m = {
-          top: 10
+          top: 50
           , right: 30
           , bottom: 30
-          , left: 50
+          , left: 75
         }
-        , width = window.innerWidth // total width
+        , width = 1000 // total width
         , height = 400
         , hWidth = width / 2 - m.left - m.right // histogram width
         , hHeight = 400 - m.top - m.bottom // histogram height
@@ -153,6 +228,8 @@
       var yAxis = d3.svg.axis()
           .scale(y)
           .orient('left');
+
+      
       
       var hist2YAxis = d3.svg.axis()
         .scale(y)
@@ -251,7 +328,25 @@
       hist1.append("g")
           .attr("class", "y axis")
           .attr("transform", "translate(" + 0 + ",0)")
-          .call(yAxis);
+          .call(yAxis)
+          .append("svg:text")
+        .text("probability")
+        .attr("transform", "translate(" + -45 + "," + 80 + ") rotate(-90)")
+        .attr("class", "sliderLabel");
+
+      hist1.append("g")
+        .attr("class", "bigLabel")
+        .attr("transform", "translate(" + (hWidth/2) + "," + (-20) + ")")
+        .append("svg:text")
+        .attr('text-anchor','middle')
+        .text('Fat-tailed')
+
+      hist2.append("g")
+        .attr("class", "bigLabel")
+        .attr("transform", "translate(" + (hWidth/2) + "," + (-20) + ")")
+        .append("svg:text")
+        .attr('text-anchor','middle')
+        .text('Normal')
       
       hist2.append("g")
           .attr("class", "x axis")
@@ -299,35 +394,100 @@
             .attr("height", function(d) { return hHeight - y(d.y); });
       };
       
-      var h2 = hHeight - 250
+      var h2 = hHeight - 200
 
       var market1 = d3.select("#frame").append("svg")
-          .classed('market', true)
+          .classed('market market1', true)
           .attr("width", hWidth + m.left + m.right)
-          .attr("height", h2)
+          .attr("height", h2 + 50)
         .append("g")
-          .attr("transform", "translate(" + m.left + "," + m.top + ")");
+          .attr("transform", "translate(" + m.left + "," + 20 + ")");
+      
+      d3.select('.market1').append('text')
+        .attr('text-anchor', 'middle')
+        .attr('transform','translate(' + (m.left + hWidth/2) + ',10)')
+        .text('fat-tailed deviations');
+          
       
       var market2 = d3.select("#frame").append("svg")
-          .classed('market', true)
+          .classed('market market2', true)
           .attr("width", hWidth + m.left + m.right)
-          .attr("height", h2)
+          .attr("height", h2 + 50)
         .append("g")
-          .attr("transform", "translate(" + 20 + "," + m.top + ")");
+          .attr("transform", "translate(" + 45 + "," + 20 + ")");
+
+      d3.select('.market2').append('text')
+        .attr('text-anchor', 'middle')
+        .attr('transform','translate(' + (m.left + hWidth/2) + ',10)')
+        .text('normal deviations');
+      
+      
+      var brown1 = d3.select("#frame").append("svg")
+          .classed('brown1', true)
+          .attr("width", hWidth + m.left + m.right)
+          .attr("height", h2 + 50)
+        .append("g")
+          .attr("transform", "translate(" + m.left + "," + 20 + ")");
+      
+      d3.select('.brown1').append('text')
+        .attr('text-anchor', 'middle')
+        .attr('transform','translate(' + (m.left + hWidth/2) + ',10)')
+        .text('fat-tailed walk')
+
+      var brown2 = d3.select("#frame").append("svg")
+          .classed('brown2', true)
+          .attr("width", hWidth + m.left + m.right)
+          .attr("height", h2 + 50)
+        .append("g")
+          .attr("transform", "translate(" + 45 + "," + 20 + ")");
+      
+      d3.select('.brown2').append('text')
+        .attr('text-anchor', 'middle')
+        .attr('transform','translate(' + (m.left + hWidth/2) + ',10)')
+        .text('normal walk')
 
       var y2 = d3.scale.linear()
-          .domain(xdomain)
-          .range([h2, 0]);
+        .domain(xdomain)
+        .range([h2, 0]);
+      
+      var by1 = d3.scale.linear()
+        .domain(xdomain)
+        .range([h2, 0]);
+
+      var by2 = d3.scale.linear()
+        .domain(xdomain)
+        .range([h2, 0]);
 
       var x2 = d3.scale.linear()
-          .domain([0, 50])
-          .range([0,hWidth])
+        .domain([0, 50])
+        .range([0,hWidth])
 
       var plotData1 = d3.range(50).map(function(){return newFTData();})
       var plotData2 = d3.range(50).map(function(){return newNormalData();})
 
+      var brownData1 = d3.range(50).map(function(){return 0;})
+      var brownData2 = d3.range(50).map(function(){return 0;})
+
+      for( var i = 1; i < brownData1.length; i++){
+        brownData1[i] += plotData1[i] + brownData1[i-1]
+      };
+
+      for( var i = 1; i < brownData2.length; i++){
+        brownData2[i] += plotData2[i] + brownData2[i-1]
+      };
+
       var yAxis2 = d3.svg.axis()
           .scale(y2)
+          .tickSize(-hWidth)
+          .orient('left')
+      
+      var byAxis1 = d3.svg.axis()
+          .scale(by1)
+          .tickSize(-hWidth)
+          .orient('left')
+
+      var byAxis2 = d3.svg.axis()
+          .scale(by2)
           .tickSize(-hWidth)
           .orient('left')
 
@@ -336,24 +496,81 @@
           .orient("bottom");
 
       market1.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(0," + hHeight + ")")
-          .call(xAxis2);
-
-      market1.append("g")
           .attr("class", "y axis")
           .attr("transform", "translate(0,0)")
           .call(yAxis2);
       
-      market2.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(0," + hHeight + ")")
-          .call(xAxis2);
-
+      brown1.append("g")
+          .attr("class", "y axis")
+          .attr("transform", "translate(0,0)")
+          .call(byAxis1);
+      
+      brown2.append("g")
+          .attr("class", "y axis")
+          .attr("transform", "translate(0,0)")
+          .call(byAxis2);
+      
       market2.append("g")
           .attr("class", "y axis")
           .attr("transform", "translate(0,0)")
           .call(yAxis2);
+
+      var zeroLine1 = market1.append("line")
+          .attr({ 
+            x1: 0, 
+            x2: hWidth, 
+            y1: 0, 
+            y2: 0,
+            class: "zero",
+            transform: "translate(0," + h2/2 + ")"
+          });
+          
+      var bzeroLine1 = brown1.append("line")
+          .attr({ 
+            x1: 0, 
+            x2: hWidth, 
+            y1: 0, 
+            y2: 0,
+            class: "zero"
+          });
+
+      var bzeroLine2 = brown2.append("line")
+          .attr({ 
+            x1: 0, 
+            x2: hWidth, 
+            y1: 0, 
+            y2: 0,
+            class: "zero"
+          });
+
+      var zeroLine2 = market2.append("line")
+          .attr({ 
+            x1: 0, 
+            x2: hWidth, 
+            y1: 0, 
+            y2: 0,
+            class: "zero",
+            transform: "translate(0," + h2/2 + ")"
+          });
+
+      var sdBox1 = market1.append("rect")
+        .attr({
+          width : hWidth,
+          height : y2(-1) - y2(1),
+          class : "sdBox",
+          x: 0,
+          y: y2(1)
+        });
+
+
+      var sdBox2 = market2.append("rect")
+        .attr({
+          width : hWidth,
+          height : y2(-1) - y2(1),
+          class : "sdBox",
+          x: 0,
+          y: y2(1)
+        });
 
       var tooltip = d3.select("#frame").append("div") // the div used for the tooltips
         .attr("class", "tooltip")       // apply the 'tooltip' class
@@ -363,10 +580,17 @@
           .x(function(d,i) { return x2(i); })
           .y(function(d) { return y2(d); });
       
+      var bline1 = d3.svg.line()
+          .x(function(d,i) { return x2(i); })
+          .y(function(d) { return y2(d); });
+      
+      var bline2 = d3.svg.line()
+          .x(function(d,i) { return x2(i); })
+          .y(function(d) { return y2(d); });
+      
       var line2 = d3.svg.line()
           .x(function(d,i) { return x2(i); })
           .y(function(d) { return y2(d); });
-
 
       function newFTData(){
         var rand = Math.round( Math.random() * ftData.length)
@@ -385,6 +609,12 @@
         .append("rect")
           .attr("width", hWidth)
           .attr("height", h2);
+        
+      brown1.append("defs").append("clipPath")
+          .attr("id", "bclip1")
+        .append("rect")
+          .attr("width", hWidth)
+          .attr("height", h2);
       
       market2.append("defs").append("clipPath")
           .attr("id", "clip2")
@@ -392,11 +622,23 @@
           .attr("width", hWidth)
           .attr("height", h2);
 
+      brown2.append("defs").append("clipPath")
+          .attr("id", "bclip2")
+        .append("rect")
+          .attr("width", hWidth)
+          .attr("height", h2);
+
       var clip1 = market1.append('g')
         .attr('clip-path','url(#clip1)');
+      
+      var bclip1 = brown1.append('g')
+        .attr('clip-path','url(#bclip1)');
         
       var clip2 = market2.append('g')
         .attr('clip-path','url(#clip2)');
+    
+      var bclip2 = brown2.append('g')
+        .attr('clip-path','url(#bclip2)');
 
       var path1 = clip1
           .append('path')
@@ -409,6 +651,28 @@
           .attr("d", line1)
           .classed('plotline',true);
       
+      var bpath1 = bclip1
+          .append('path')
+            .data([brownData1])
+          .attr({
+            class: 'line',
+            fill: 'none',
+            stroke: 'black'
+          })
+          .attr("d", bline1)
+          .classed('plotline',true);
+          
+      var bpath2 = bclip2
+          .append('path')
+            .data([brownData2])
+          .attr({
+            class: 'line',
+            fill: 'none',
+            stroke: 'black'
+          })
+          .attr("d", bline2)
+          .classed('plotline',true);
+      
       var path2 = clip2
           .append('path')
             .data([plotData2])
@@ -419,6 +683,20 @@
           })
           .attr("d", line2)
           .classed('plotline',true);
+      
+
+      function stdDev(data){
+        var ex = 0, e_x2 = 0
+        for(var i in data){
+          var l = data[i];
+          ex += l / data.length;
+          e_x2 += Math.pow(l, 2)/data.length
+        };
+        var ex_2 = Math.pow(ex,2);
+        return Math.pow(e_x2 - ex_2, 0.5);
+      }
+
+
 
       function plot1Anim(){
         var t = newFTData();
@@ -436,12 +714,12 @@
             .duration(200)
             .attr("opacity", "1")
         
-        
         plotData1.push(t);
-
+        
         var circle = clip1.selectAll("circle")
           .data(plotData1, function(d){return d; });
-
+        
+        
         circle.enter()
           .append('circle')
           .attr({
@@ -451,13 +729,15 @@
             cy: function(d){return y2(d);},
             stroke: "black"
           });
-
+        
+        var v = stdDev(plotData1);
+        
         circle.transition().duration(dur).ease('linear')
           .attr("cx", function(d,i){return x2(i -1);})
-          .attr("r", "4px");
-
+          .attr("r", "3px");
+        
         circle.exit().remove();
-
+        
         path1
           .attr("d", line1)
           .attr("transform", null)
@@ -465,12 +745,63 @@
             .duration(dur)
             .ease("linear")
             .attr("transform", "translate(" + x2(-1) + ",0)")
+        
+        // brownian plot
+        
+        brownData1.push(brownData1[brownData1.length - 1] + t);
+        by1.domain([
+          d3.min([d3.min(brownData1) - 2, xdomain[0]])
+          , d3.max([d3.max(brownData1) + 2, xdomain[1]])
+        ]);
+        
+        byAxis1.scale(by1);
+        brown1.select('.y.axis').call(byAxis1);
+        
+       bzeroLine1
+        .transition().duration()
+        .attr("y1", by1(0)).attr("y2", by1(0))
+        
+        
+        var bcircle = bclip1.selectAll("circle")
+          .data(brownData1, function(d){return d; });
+        
+        bcircle.enter()
+          .append('circle')
+          .attr({
+            r: 10,
+            fill: '#999',
+            cx: function(d,i){return x2(i);},
+            cy: by1,
+            stroke: "black"
+          });
+          
+        bcircle.transition().duration(dur).ease('linear')
+          .attr("cx", function(d,i){return x2(i -1);})
+          .attr('cy', function(d){ return by1(d); })
+          .attr("r", "3px");
+        
+        bcircle.exit().remove();
+        
+        bline1.y(by1)
+        
+        bpath1
+          .attr("d", bline1)
+          .attr("transform", null)
+          .transition()
+            .duration(dur)
+            .ease("linear")
+            .attr("transform", "translate(" + x2(-1) + ",0)")
             .each('end', plot1Anim);
-
+        
         plotData1.shift();
+        brownData1.shift();
       };
 
       plot1Anim();
+      
+      
+      
+      
       
       function plot2Anim(){
         
@@ -502,10 +833,10 @@
             cy: function(d){return y2(d);},
             stroke: "black"
           });
-        
+      
         circle.transition().duration(dur).ease('linear')
           .attr("cx", function(d,i){return x2(i -1);})
-          .attr("r", "4px");
+          .attr("r", "3px");
         
         circle.exit().remove();
         
@@ -516,26 +847,64 @@
             .duration(dur)
             .ease("linear")
             .attr("transform", "translate(" + x2(-1) + ",0)")
-            .each('end', plot2Anim);
         
-        plotData2.shift();
+
+         // brownian plot
+
+         brownData2.push(brownData2[brownData2.length - 1] + t);
+         
+         by2.domain([
+           d3.min([d3.min(brownData2) - 2, xdomain[0]])
+           , d3.max([d3.max(brownData2) + 2, xdomain[1]])
+         ]);
+
+         byAxis2.scale(by2);
+         brown2.select('.y.axis').call(byAxis2);
+
+        bzeroLine2
+          .transition().duration()
+          .attr("y1", by2(0))
+          .attr("y2", by2(0));
+
+
+         var bcircle = bclip2.selectAll("circle")
+           .data(brownData2, function(d){ return d; });
+
+         bcircle.enter()
+           .append('circle')
+           .attr({
+             r: 10,
+             fill: '#999',
+             cx: function(d,i){return x2(i);},
+             cy: by2,
+             stroke: "black"
+           });
+
+         bcircle.transition().duration(dur).ease('linear')
+           .attr("cx", function(d,i){ return x2(i - 1);})
+           .attr('cy', function(d){ return by2(d); })
+           .attr("r", "3px");
+
+         bcircle.exit().remove()
+
+         bline2.y(by2)
+
+         bpath2
+           .attr("d", bline2)
+           .attr("transform", null)
+           .transition()
+             .duration(dur)
+             .ease("linear")
+             .attr("transform", "translate(" + x2(-1) + ",0)")
+             .each('end', plot2Anim);
+
+         plotData2.shift();
+         brownData2.shift();
+
       }
       plot2Anim()
 
-      var lineNorm = d3.svg.line()
-        .interpolate('basis')
-        .x(function(d) {return x(d.x); })
-        .y(function(d){return y(d.y); });
-      
-      // var normLine = clip.append('path')
-      //   .attr({
-      //     class: 'normLine'
-      //     , d: lineNorm(normBinned)
-      //     , stroke: 'steelblue'
-      //     , 'stroke-width': 2
-      //     , fill: 'none'
-      //   }); 
-
+    
       ;(function setupSlider(){
         var sliderY = d3.scale.linear().domain([0.1, 1]).range([30,300]);
         var sliderAxis = d3.svg.axis()
@@ -543,12 +912,14 @@
           .orient("left")
           .ticks(10)
           .tickFormat(function(d){
-            return Math.round(kurtosis(d, p) * 100) / 100;
+            return d3.round(kurtosis(d, p),1);
           });
+
         var slider = svg.append('g')
           .attr('class', 'p-value-slider')
           .attr('transform', 'translate(' + (width / 2 - 0) + ',50)')
           .call(sliderAxis);
+
       
         var drag = d3.behavior.drag()
           .on('drag', function(d){
@@ -566,7 +937,15 @@
             redraw(Number(d3.select(this).attr('d')));
           });
       
-        slider.append('circle')
+        var sliderLabel = slider.append("text")
+          .text("Kurtosis (normality)")
+          .attr({
+            transform: "translate(-65," + 9 + ") rotate(0)",
+            class: "sliderLabel"
+          })
+          .style("font" ,"15px")
+
+        var dragger = slider.append('circle')
           .attr('class', 'handle')
           .attr('r', 7)
           .attr('d', (sliderY.domain()[0] + sliderY.domain()[1]) / 2)
