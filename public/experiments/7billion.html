@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <style>
+      body, html {
+        margin: 0;
+        overflow: hidden;
+      }
+      .block{
+        position: absolute;
+        box-sizing: border-box;
+        border: 1px solid white;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <script>
+      var w = window.innerWidth
+        , h = window.innerHeight
+        , duration = 1000
+        , block = {
+          big : {
+            w : 500
+            , h : 500
+          }
+          , small : {
+            w : 50
+            , h : 50
+          }
+        }
+        , style
+        , blocks = d3.select('body').append('div')
+          .attr('class', 'blocks')
+        , rows = 10
+        , cols = 10
+        , bigLeft = function(d, i){
+          var col = d % cols
+            , bw = block.big.w
+            , x = w / 2 + col * ( bw + 2) - bw / 2
+          return + x + 'px'
+        }
+        , bigTop = function(d, i){
+          var row = Math.floor( d / cols )
+            , bh = block.big.h
+            , y = h / 2 + row * ( bh + 2) - bh / 2
+          return + y + 'px'
+        }
+        , bigStyle = {
+          'width' : block.big.w + 'px'
+          , 'height' : block.big.h + 'px'
+          , 'background-color' : 'white'
+          , 'left' : bigLeft
+          , 'top' : bigTop
+        }
+        , smallLeft = function(d, i){
+          var col = d % cols
+            , bw = block.small.w
+            , x = w / 2 - (bw * cols) / 2 + col * (bw)
+          return + x + 'px'
+        }
+        , smallTop  = function(d, i){
+          var row = Math.floor( d / cols )
+            , bh = block.small.h
+            , y = h / 2 + row * (bh) - (bh * rows) / 2
+          return + y + 'px'
+        }
+        , smallStyle = {
+          'width' : block.small.w + 'px'
+          , 'height' : block.small.h + 'px'
+          , 'opacity' : '1.0'
+          , 'background-color' : function(d, i){
+            if(i===0) return 'red'
+            return 'black'
+          }
+          , 'left' : smallLeft
+          , 'top' : smallTop
+        }
+        , delay = function(i){
+          return 1000 + Math.log(i) * 1000
+        }
+
+      function createCanvas(dot){
+        var canvas = document.createElement('canvas')
+          , bw = block.small.w
+          , bh = block.small.h
+          , border = 2
+        var ctx = canvas.getContext('2d')
+        canvas.width  = block.big.w - 2
+        canvas.height = block.big.h - 2
+        // draw the grid with the red dot
+        debugger
+        for(var i = 0; i < rows; i++) {
+          for(var j = 0; j < cols; j++) {
+            ctx.beginPath()
+            var b = { 
+              x : i * bw - 1
+              , y : j * bh - 1
+              , w : i + bw
+              , h : j + bh
+            }
+            if( dot && i === 0 && j === 0 ) ctx.fillStyle = 'red'
+            else ctx.fillStyle = 'black'
+            ctx.strokeStyle = 'white'
+            ctx.lineWidth = border
+            ctx.rect(b.x, b.y, b.w, b.h)
+            ctx.fill()
+            ctx.stroke()
+          }
+        }
+        return canvas
+      }
+      function randomTop(i){
+        var val
+        if(i % 2 === 0) {
+          if(Math.random() > 0.5) val = - block.big.h
+          else val = h
+        }else val = Math.random() * h
+        return val + 'px'
+      }
+      function randomLeft(i){
+        var val
+        if(i % 2 === 0) val = Math.random() * w
+        else {
+          if(Math.random() > 0.5) val = - block.big.w
+          else val = w
+        }
+        return val + 'px'
+      }
+      
+      blocks
+        .append('div')
+        .attr('class','block')
+        .style({
+          'width' : (block.big.w * 2) + 'px'
+          , 'height' : (block.big.h * 2) + 'px'
+          , 'background-color' : 'red'
+          , 'left' : ( w / 2 - block.big.w ) + 'px' 
+          , 'top' : ( h / 2 - block.big.h) + 'px'
+          , 'opacity' : 0
+        })
+        .transition()
+        .duration(2000)
+        .style({
+          'width' : (block.big.w) + 'px'
+          , 'height' : (block.big.h) + 'px'
+          , 'left' : ( w / 2 - block.big.w / 2 ) + 'px'
+          , 'top' : ( h / 2 - block.big.h / 2 ) + 'px'
+          , 'opacity' : 1
+        })
+        .each('end', function(){
+          setTimeout(next, 1000)
+        })
+      
+      function next(){
+        style = Object.create(bigStyle)
+        style.opacity = '0'
+        style['background-color'] = 'white'
+        style.top = randomTop
+        style.left = randomLeft
+        style.width = block.small.w
+        style.height = block.small.h
+        d3.select('.blocks').selectAll('.block')
+          .data(d3.range(rows * cols))
+          .enter()
+            .append('div')
+            .attr('class', 'block')
+            .style(style)
+        d3.select('.blocks').selectAll('.block')
+          .transition()
+          .duration(duration)
+          .delay(delay)
+          .style(smallStyle).each("end", function(i, d){
+            if(i + 1 !== rows * cols) return
+            setTimeout(function(){
+              var style = Object.create(bigStyle)
+              style['background-color'] = 'black'
+              style.opacity = function(i){
+                if(i === 0) return '1.0'
+                else return '0.0'
+              }
+              style.top = function(i){
+                if(i === 0) return bigTop(i)
+                else return randomTop(i)
+              }
+              style.left = function(i){
+                if(i === 0) return bigLeft(i)
+                else return randomLeft(i)
+              }
+              style.width = function(i){
+                if(i === 0) return block.big.w + 'px'
+                else return block.small.w + 'px'
+              }
+              style.height = function(i){
+                if(i === 0) return block.big.h + 'px'
+                else return block.small.h + 'px'
+              }
+              d3.select('.blocks').selectAll('.block')
+                .style(style)
+              var bw = block.small.w
+                , bh = block.small.h
+                , border = 2
+                , canvas2Cache
+              // canvas image with the block of interest
+              d3.select('.blocks').selectAll('.block')
+                .each(function(d){
+                  var canvas
+                  if(d !== 0) {
+                    if(canvas2Cache) canvas = canvas2Cache
+                    else canvas = canvas2Cache = createCanvas(d === 0)
+                  }else canvas = createCanvas(d === 0)
+                  // add an image of the contents of the canvas
+                  d3.select(this).append('img')
+                    .attr('src', canvas.toDataURL())
+                    .style({ 
+                      'width' : '100%'
+                      , 'height' : '100%'
+                    })
+                })
+              var style = Object.create(smallStyle)
+              style['opacity'] = '1.0'
+              style['background-color'] = 'black'
+              d3.select('.blocks').selectAll('.block')
+                .transition()
+                .duration(duration)
+                .delay(function(i){ return 2000 + delay(i) })
+                .style(style)
+                .each('end', function(i, d){
+                  if(i + 1 !== rows * cols) return
+                  var style = Object.create(bigStyle)
+                  style.opacity = function(d){
+                    if(d===0) return '1.0'
+                    else return '0.0'
+                  }
+                  d3.select('.blocks').selectAll('.block')
+                    .transition()
+                    .duration(duration)
+                    .style({
+                      top : function(i){
+                        return smallTop(i)
+                      }
+                      , left : smallLeft
+                    })
+                  // d3.select('.blocks').selectAll('.block')
+                  //   .style(style)
+                  // d3.select('.blocks').selectAll('.block')
+                  //   .transition()
+                  //   .duration(duration)
+                  //   .style('opacity','1.0')
+                })
+           })
+        })
+      }
+    </script>
+  </body>
+</html>
