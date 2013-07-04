@@ -6,252 +6,356 @@
       body, html {
         margin: 0;
         overflow: hidden;
+        font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+        font-weight: 300;
       }
       .block{
         position: absolute;
+        color: white;
+        text-align: center;
+        line-height: 200px;
         box-sizing: border-box;
         border: 1px solid white;
+        background-color: black;
+        cursor: pointer;
+      }
+      .back{
+        position: relative;
+        line-height: 0px;
+        margin-top: 15px;
+        margin-right: 10px;
+        cursor: pointer;
+        float: right;
+      }
+      .block img{
+        width: 100%;
+        height: 100%;
+        margin: auto;
+        float: left;
+      }
+      .intro{
+        margin: auto;
+        width: 100%;
+        text-align: center;
+        position: relative;
+        top: 10%;
+      }
+      .you{
+        position: absolute;
+        line-height : 0px;
+        margin : 0px;
+        text-align: center;
       }
     </style>
   </head>
   <body>
+    <h4 class="back"> back </h4>
+    <div class="intro">
+      <h1> What does it feel like to be one of 7 billion? </h1>
+    </div>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script>
       var w = window.innerWidth
         , h = window.innerHeight
-        , duration = 1000
-        , block = {
-          big : {
-            w : 500
-            , h : 500
-          }
-          , small : {
-            w : 50
-            , h : 50
+      d3.select('body').style({width : w + 'px', height : h + 'px' })
+      var levels = [[1, 7], [10, 10], [10, 10], [10, 10], [8, 8], [4, 4], [1, 1]]
+        , levelBreadcrumbs = []
+        , zoomLevel = 0
+        , animating = false
+        , duration = 500
+        , padding = 100
+        , blockDimensions = function(rows, cols, w, h) {
+          var maxRowOrCol = Math.max(rows, cols)
+            , minWOrH = Math.min(w, h)
+            , size = Math.floor(minWOrH / maxRowOrCol)
+          return {
+            big : {
+              w : size * maxRowOrCol
+              , h : size * maxRowOrCol
+            }
+            , small : {
+              w  : size
+              , h : size
+            }
           }
         }
+        , block = blockDimensions(levels[zoomLevel][0], levels[zoomLevel][1], w - padding, h - padding)
         , style
-        , blocks = d3.select('body').append('div')
-          .attr('class', 'blocks')
-        , rows = 10
-        , cols = 10
-        , bigLeft = function(d, i){
-          var col = d % cols
-            , bw = block.big.w
-            , x = w / 2 + col * ( bw + 2) - bw / 2
-          return + x + 'px'
+        , _blocks = d3.select('body').append('div').attr('class', 'blocks')
+        , blocks = function(){
+          return _blocks.selectAll('.block')
         }
-        , bigTop = function(d, i){
-          var row = Math.floor( d / cols )
-            , bh = block.big.h
-            , y = h / 2 + row * ( bh + 2) - bh / 2
-          return + y + 'px'
-        }
-        , bigStyle = {
-          'width' : block.big.w + 'px'
-          , 'height' : block.big.h + 'px'
-          , 'background-color' : 'white'
-          , 'left' : bigLeft
-          , 'top' : bigTop
-        }
-        , smallLeft = function(d, i){
-          var col = d % cols
-            , bw = block.small.w
-            , x = w / 2 - (bw * cols) / 2 + col * (bw)
-          return + x + 'px'
-        }
-        , smallTop  = function(d, i){
-          var row = Math.floor( d / cols )
-            , bh = block.small.h
-            , y = h / 2 + row * (bh) - (bh * rows) / 2
-          return + y + 'px'
-        }
-        , smallStyle = {
-          'width' : block.small.w + 'px'
-          , 'height' : block.small.h + 'px'
-          , 'opacity' : '1.0'
-          , 'background-color' : function(d, i){
-            if(i===0) return 'red'
-            return 'black'
+        , bigLeft = function(rows, cols, bbw, bsw, w){
+          return function(d, i){
+            var col = d % cols
+              , x = w / 2 - bbw / 2 // + col * ( bsw + 2)
+            return + x + 'px'
           }
-          , 'left' : smallLeft
-          , 'top' : smallTop
+        }
+        , bigTop = function(rows, cols, bbh, bsh, h){
+          return function(d, i){
+            var row = Math.floor( d / cols )
+              , y = h / 2 - bbh / 2 //+ row * ( bsh + 2)
+            return + y + 'px'
+          }
+        }
+        , bigStyle = function(bw, bh, w, h){
+          return {
+            'width' : bw + 'px'
+            , 'height' : bh + 'px'
+            , 'background-color' : 'white'
+            , 'left' : w / 2 - bw / 2 + 'px'
+            , 'top' : h / 2 - bh / 2 + 'px'
+          }
+        }
+        , smallLeft = function(rows, cols, bw, w){
+          return function(d, i){
+            var col = d % cols
+              , x = w / 2 - (bw * cols) / 2 + col * (bw)
+            return + x + 'px'
+          }
+        }
+        , smallTop  = function(rows, cols, bh, h){
+          return function(d, i){
+            var row = Math.floor( d / cols )
+              , y = h / 2 - (bh * rows) / 2 + row * (bh)
+            return + y + 'px'
+          }
+        }
+        , smallStyle = function(rows, cols, bw, bh, w, h){
+          return {
+            'width' : bw + 'px'
+            , 'height' : bh + 'px'
+            , 'opacity' : '1.0'
+            , 'background-color' : 'black'
+            , 'left' : smallLeft(rows, cols, bw, w)
+            , 'top' : smallTop(rows, cols, bh, h)
+          }
         }
         , delay = function(i){
-          return 1000 + Math.log(i) * 1000
+          return duration / 3 + Math.log(i) * (duration / 3)
         }
-
-      function createCanvas(dot){
-        var canvas = document.createElement('canvas')
-          , bw = block.small.w
-          , bh = block.small.h
-          , border = 2
-        var ctx = canvas.getContext('2d')
-        canvas.width  = block.big.w - 2
-        canvas.height = block.big.h - 2
-        // draw the grid with the red dot
-        debugger
-        for(var i = 0; i < rows; i++) {
-          for(var j = 0; j < cols; j++) {
-            ctx.beginPath()
-            var b = { 
-              x : i * bw - 1
-              , y : j * bh - 1
-              , w : i + bw
-              , h : j + bh
+        , createCanvas = function(rows, cols, w, h){
+          var canvas = document.createElement('canvas')
+            , border = 2
+          var ctx = canvas.getContext('2d')
+            , bw = w / cols
+            , bh = h / rows
+          canvas.width  = w - border
+          canvas.height = h - border
+          for(var i = 0; i < cols; i++) {
+            for(var j = 0; j < rows; j++) {
+              ctx.beginPath()
+              var block = { 
+                x : i * bw - 1
+                , y : j * bh - 1
+                , w : i + bw
+                , h : j + bh
+              }
+              ctx.fillStyle = 'black'
+              ctx.strokeStyle = 'white'
+              ctx.lineWidth = border
+              ctx.rect(block.x, block.y, block.w, block.h)
+              ctx.fill()
+              ctx.stroke()
             }
-            if( dot && i === 0 && j === 0 ) ctx.fillStyle = 'red'
-            else ctx.fillStyle = 'black'
-            ctx.strokeStyle = 'white'
-            ctx.lineWidth = border
-            ctx.rect(b.x, b.y, b.w, b.h)
-            ctx.fill()
-            ctx.stroke()
+          }
+          return canvas
+        }
+        , randomTop = function(bh, h){
+          return function(i){
+            var val
+            if(i % 2 === 0) {
+              if(Math.random() > 0.5) val = - bh
+              else val = h
+            }else val = Math.random() * h
+            return val + 'px'
           }
         }
-        return canvas
-      }
-      function randomTop(i){
-        var val
-        if(i % 2 === 0) {
-          if(Math.random() > 0.5) val = - block.big.h
-          else val = h
-        }else val = Math.random() * h
-        return val + 'px'
-      }
-      function randomLeft(i){
-        var val
-        if(i % 2 === 0) val = Math.random() * w
-        else {
-          if(Math.random() > 0.5) val = - block.big.w
-          else val = w
+        , randomLeft = function(bw, w){
+          return function(i){
+            var val
+            if(i % 2 === 0) val = Math.random() * w
+            else {
+              if(Math.random() > 0.5) val = - bw
+              else val = w
+            }
+            return val + 'px'
+          }
         }
-        return val + 'px'
+        , n = function(){
+          return levels[zoomLevel][0] * levels[zoomLevel][1]
+        }
+      
+      function extend(arg1, arg2){
+        var obj = Object.create(arg1)
+        for( var key in arg2) obj[key] = arg2[key]
+        return obj
       }
       
-      blocks
+      // opening
+      animating = true
+      blocks()
+        .data(d3.range(n()))
+        .enter()
         .append('div')
-        .attr('class','block')
-        .style({
-          'width' : (block.big.w * 2) + 'px'
-          , 'height' : (block.big.h * 2) + 'px'
-          , 'background-color' : 'red'
-          , 'left' : ( w / 2 - block.big.w ) + 'px' 
-          , 'top' : ( h / 2 - block.big.h) + 'px'
-          , 'opacity' : 0
-        })
-        .transition()
-        .duration(2000)
-        .style({
-          'width' : (block.big.w) + 'px'
-          , 'height' : (block.big.h) + 'px'
-          , 'left' : ( w / 2 - block.big.w / 2 ) + 'px'
-          , 'top' : ( h / 2 - block.big.h / 2 ) + 'px'
-          , 'opacity' : 1
-        })
-        .each('end', function(){
-          setTimeout(next, 1000)
-        })
-      
-      function next(){
-        style = Object.create(bigStyle)
-        style.opacity = '0'
-        style['background-color'] = 'white'
-        style.top = randomTop
-        style.left = randomLeft
-        style.width = block.small.w
-        style.height = block.small.h
-        d3.select('.blocks').selectAll('.block')
-          .data(d3.range(rows * cols))
-          .enter()
-            .append('div')
-            .attr('class', 'block')
-            .style(style)
-        d3.select('.blocks').selectAll('.block')
+          .attr('class', 'block')
+          .style({
+            'width' : Math.min(w, h) + 'px'
+            , 'height' : Math.min(w, h) + 'px'
+            , 'top' : '0px'
+            , 'left' : '0px'
+            , 'opacity' : '0'
+          })
           .transition()
           .duration(duration)
           .delay(delay)
-          .style(smallStyle).each("end", function(i, d){
-            if(i + 1 !== rows * cols) return
-            setTimeout(function(){
-              var style = Object.create(bigStyle)
-              style['background-color'] = 'black'
-              style.opacity = function(i){
-                if(i === 0) return '1.0'
-                else return '0.0'
-              }
-              style.top = function(i){
-                if(i === 0) return bigTop(i)
-                else return randomTop(i)
-              }
-              style.left = function(i){
-                if(i === 0) return bigLeft(i)
-                else return randomLeft(i)
-              }
-              style.width = function(i){
-                if(i === 0) return block.big.w + 'px'
-                else return block.small.w + 'px'
-              }
-              style.height = function(i){
-                if(i === 0) return block.big.h + 'px'
-                else return block.small.h + 'px'
-              }
-              d3.select('.blocks').selectAll('.block')
-                .style(style)
-              var bw = block.small.w
-                , bh = block.small.h
-                , border = 2
-                , canvas2Cache
-              // canvas image with the block of interest
-              d3.select('.blocks').selectAll('.block')
-                .each(function(d){
-                  var canvas
-                  if(d !== 0) {
-                    if(canvas2Cache) canvas = canvas2Cache
-                    else canvas = canvas2Cache = createCanvas(d === 0)
-                  }else canvas = createCanvas(d === 0)
-                  // add an image of the contents of the canvas
-                  d3.select(this).append('img')
-                    .attr('src', canvas.toDataURL())
-                    .style({ 
-                      'width' : '100%'
-                      , 'height' : '100%'
-                    })
-                })
-              var style = Object.create(smallStyle)
-              style['opacity'] = '1.0'
-              style['background-color'] = 'black'
-              d3.select('.blocks').selectAll('.block')
-                .transition()
-                .duration(duration)
-                .delay(function(i){ return 2000 + delay(i) })
-                .style(style)
-                .each('end', function(i, d){
-                  if(i + 1 !== rows * cols) return
-                  var style = Object.create(bigStyle)
-                  style.opacity = function(d){
-                    if(d===0) return '1.0'
-                    else return '0.0'
-                  }
-                  d3.select('.blocks').selectAll('.block')
-                    .transition()
-                    .duration(duration)
-                    .style({
-                      top : function(i){
-                        return smallTop(i)
-                      }
-                      , left : smallLeft
-                    })
-                  // d3.select('.blocks').selectAll('.block')
-                  //   .style(style)
-                  // d3.select('.blocks').selectAll('.block')
-                  //   .transition()
-                  //   .duration(duration)
-                  //   .style('opacity','1.0')
-                })
-           })
-        })
+          .style(
+            extend(
+              smallStyle(levels[zoomLevel][0], levels[zoomLevel][1], block.small.w, block.small.h, w, h)
+              , { 'opacity' : '1'
+            })
+          ).each('end', function(d, i){
+            if(i + 1 !== n() ) return
+            animating = false
+            blocks().on('click', zoomIn )
+          })
+      
+      d3.select('.back').on('click', zoomOut )
+
+      function zoomOut(){
+        if(zoomLevel < 1 || animating) return false
+        animating = true
+        var i = levelBreadcrumbs.pop()
+          , selectedBlock = d3.select('.blocks')
+              .selectAll('.block:nth-child(' + ( i + 1) +')')
+          , rows = levels[zoomLevel][0]
+          , cols = levels[zoomLevel][1]
+
+        if(zoomLevel + 1 === levels.length)
+          d3.selectAll('.blocks .block h3').remove()
+        addGridToBlocks(blocks(), rows, cols, block.big.w, block.big.h)
+        selectedBlock.style(bigStyle(block.big.w, block.big.h, w, h))
+        var rows = levels[--zoomLevel][0]
+        var cols = levels[zoomLevel][1]
+        block = blockDimensions(rows, cols, w - padding, h - padding)
+        var s = blocks()
+          .data(d3.range(n()))
+        
+        s.exit().remove()
+        s.enter().append('div')
+          .attr('class', 'block')
+        blocks()
+          .style({
+            'opacity' : function(d, ii){
+              if(ii === i) return '1.0'
+              else return '0.0'
+            }
+            , 'left' : function(d, ii){
+              if(ii !== i) return randomLeft(block.small.w, w)(d, ii)
+              else return false
+            }
+            , 'top' : function(d, ii){
+              if(ii !== i) return randomTop(block.small.h, h)(d, ii)
+              else return false
+            }
+          })
+        
+        blocks()
+          .transition()
+          .duration(duration)
+          .style(smallStyle(rows, cols, block.small.w, block.small.h, w, h))
+          .each('end', function(d, i){
+            if( i + 1 === s.size()) animating = false
+          })
+        
+        blocks().selectAll('img')
+          .style('opacity','1.0')
+          .transition()
+          .duration(duration)
+          .style('opacity', '0.0')
+        
+        if(zoomLevel === 0)
+          d3.select('.intro')
+            .style('opacity', '0.0')
+            .transition().duration(duration)
+            .style('opacity', '1.0')
+        
       }
+      function zoomIn(d, i){
+        if(zoomLevel + 2 > levels.length || animating) return false
+        animating = true
+        if(zoomLevel === 0)
+          d3.select('.intro')
+            .style('opacity', '1.0')
+            .transition().duration(duration)
+            .style('opacity', '0.0')
+        var rows = levels[++zoomLevel][0]
+          , cols = levels[zoomLevel][1]
+        levelBreadcrumbs.push(i)
+        addGridToBlocks(blocks(), rows, cols, block.small.w, block.small.h)
+        var counter = 0
+          , len = blocks().size()
+        blocks().selectAll('img').style('opacity','0.0')
+          .transition()
+          .duration(duration)
+          .style('opacity', '1.0')
+          .each('end', function(){
+            if(++counter !== len) return
+            blocks()
+              .transition()
+              .duration(duration)
+              .style({
+                left : function(ii){
+                  if(i !== ii) return randomLeft(block.small.w, w)(ii)
+                  else return w / 2 - block.small.w / 2 + 'px'
+                }
+                , top : function(ii){
+                  if(i !== ii) return randomTop(block.small.h, h)(ii)
+                  else return h / 2 - block.small.h / 2 + 'px'
+                }
+                , opacity : function(ii){
+                  if(i !== ii) return '0.0'
+                  else return '1.0'
+                }
+              })
+              .each('end', function(d, ii){
+                if( ii + 1 !== len) return
+                blocks().selectAll('img').remove()
+                bsmall = blockDimensions(rows, cols, block.small.w, block.small.h)
+                block = blockDimensions(rows, cols, w - padding, h - padding)
+                var data = blocks().data(d3.range(rows * cols))
+                data.enter()
+                  .append('div')
+                  .attr('class', 'block')
+                data.exit().remove()
+                var s = blocks().size()
+                blocks()
+                  .style(smallStyle(rows, cols, bsmall.small.w, bsmall.small.h, w, h))
+                  .transition()
+                  .duration(duration)
+                  .style(smallStyle(rows, cols, block.small.w, block.small.h, w, h))
+                  .each('end', function(d, i){
+                    if( i + 1 === s) animating = false
+                    blocks().on('click', zoomIn)
+                    if(zoomLevel + 1 === levels.length)
+                      d3.select('.blocks').select('.block')
+                        .append('h3')
+                          .attr('class', 'you')
+                          .text('you')
+                          .style('width', block.big.w + 'px')
+                          .style('top', (block.big.h / 2.1) + 'px' )
+                  })
+              })
+          })
+      }
+      
+      function addGridToBlocks(blocks, rows, cols, bw, bh){
+        blocks.selectAll('img').remove()
+        blocks.append('img')
+          .attr('src', createCanvas(rows, cols, bw, bh).toDataURL() )
+      }
+      
     </script>
   </body>
 </html>
