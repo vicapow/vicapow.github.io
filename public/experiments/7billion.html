@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
+  
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title></title>
     <style>
       body, html {
         margin: 0;
         overflow: hidden;
         font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
-        font-weight: 300;
+        font-weight: 100;
       }
       .block{
         position: absolute;
@@ -20,12 +22,14 @@
         cursor: pointer;
       }
       .back{
-        position: relative;
+        position: absolute;
         line-height: 0px;
         margin-top: 15px;
         margin-right: 10px;
         cursor: pointer;
-        float: right;
+        top: 0;
+        right: 0;
+        display: none;
       }
       .block img{
         width: 100%;
@@ -39,6 +43,19 @@
         text-align: center;
         position: relative;
         top: 10%;
+        opacity: 0.0;
+      }
+      .intro h1{
+        font-weight: bold;
+      }
+      .intro h3{
+        font-weight: 100;
+      }
+      .intro h3 a{
+        color: black;
+      }
+      .intro h5{
+        font-weight: 100;
       }
       .you{
         position: absolute;
@@ -46,13 +63,23 @@
         margin : 0px;
         text-align: center;
       }
+      .legend{
+        position: absolute;
+        bottom: 15px;
+        width: 100%;
+        text-align: center;
+        margin: auto;
+      }
     </style>
   </head>
   <body>
     <h4 class="back"> back </h4>
     <div class="intro">
       <h1> What does it feel like to be one of 7 billion? </h1>
+      <h3><a href="http://vctr.me">by victor powell</a> </h3>
+      <h5> ( click on a block ) </h5>
     </div>
+    <div class="legend"></div>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script>
       var w = window.innerWidth
@@ -62,7 +89,7 @@
         , levelBreadcrumbs = []
         , zoomLevel = 0
         , animating = false
-        , duration = 500
+        , duration = 1000
         , padding = 100
         , blockDimensions = function(rows, cols, w, h) {
           var maxRowOrCol = Math.max(rows, cols)
@@ -84,6 +111,20 @@
         , _blocks = d3.select('body').append('div').attr('class', 'blocks')
         , blocks = function(){
           return _blocks.selectAll('.block')
+        }
+        , peopleAtThisLevel = function(){
+          var t = 1
+          for(var i = levels.length - 1; i >= zoomLevel + 1; i--){
+            t = t * levels[i][0] * levels[i][1]
+          }
+          return t
+        }
+        // http://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
+        , numberWithCommas = function(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        , label = function(){
+          return '1 block = ' + numberWithCommas(peopleAtThisLevel()) + ' people'
         }
         , bigLeft = function(rows, cols, bbw, bsw, w){
           return function(d, i){
@@ -186,14 +227,22 @@
         , n = function(){
           return levels[zoomLevel][0] * levels[zoomLevel][1]
         }
+        , extend = function(arg1, arg2){
+          var obj = Object.create(arg1)
+          for( var key in arg2) obj[key] = arg2[key]
+          return obj
+        }
       
-      function extend(arg1, arg2){
-        var obj = Object.create(arg1)
-        for( var key in arg2) obj[key] = arg2[key]
-        return obj
-      }
+      if(w < 400) d3.select('.intro').style('font-size', '0.5em')
+      d3.select('.intro')
+        .style('opacity', '0.0')
+        .transition()
+        .duration(duration)
+        .style('opacity', '1.0')
       
-      // opening
+      d3.select('.legend').text(label)
+      
+      // opening intro
       animating = true
       blocks()
         .data(d3.range(n()))
@@ -212,9 +261,14 @@
           .delay(delay)
           .style(
             extend(
-              smallStyle(levels[zoomLevel][0], levels[zoomLevel][1], block.small.w, block.small.h, w, h)
-              , { 'opacity' : '1'
-            })
+              smallStyle(
+                levels[zoomLevel][0]
+                , levels[zoomLevel][1]
+                , block.small.w
+                , block.small.h, w, h
+              )
+              , { 'opacity' : '1' }
+            )
           ).each('end', function(d, i){
             if(i + 1 !== n() ) return
             animating = false
@@ -234,6 +288,16 @@
 
         if(zoomLevel + 1 === levels.length)
           d3.selectAll('.blocks .block h3').remove()
+        if(zoomLevel === 1)
+          d3.select('.back')
+            .style('opacity','1.0')
+            .transition()
+            .duration(duration)
+            .style({
+              'opacity' : '0.0'
+            }).each('end', function(){
+              d3.select(this).style('display', 'none')
+            })
         addGridToBlocks(blocks(), rows, cols, block.big.w, block.big.h)
         selectedBlock.style(bigStyle(block.big.w, block.big.h, w, h))
         var rows = levels[--zoomLevel][0]
@@ -267,6 +331,8 @@
           .style(smallStyle(rows, cols, block.small.w, block.small.h, w, h))
           .each('end', function(d, i){
             if( i + 1 === s.size()) animating = false
+            d3.select('.legend').text(label)
+            blocks().on('click', zoomIn)
           })
         
         blocks().selectAll('img')
@@ -285,15 +351,25 @@
       function zoomIn(d, i){
         if(zoomLevel + 2 > levels.length || animating) return false
         animating = true
-        if(zoomLevel === 0)
+        if(zoomLevel === 0){
           d3.select('.intro')
             .style('opacity', '1.0')
             .transition().duration(duration)
             .style('opacity', '0.0')
+          d3.select('.back')
+            .style('opacity','0.0')
+            .transition()
+            .duration(duration)
+            .style({
+              'display' : 'block'
+              , 'opacity' : '1.0'
+            })
+        }
         var rows = levels[++zoomLevel][0]
           , cols = levels[zoomLevel][1]
         levelBreadcrumbs.push(i)
         addGridToBlocks(blocks(), rows, cols, block.small.w, block.small.h)
+        d3.select('.legend').text(label)
         var counter = 0
           , len = blocks().size()
         blocks().selectAll('img').style('opacity','0.0')
@@ -322,7 +398,12 @@
               .each('end', function(d, ii){
                 if( ii + 1 !== len) return
                 blocks().selectAll('img').remove()
-                bsmall = blockDimensions(rows, cols, block.small.w, block.small.h)
+                bsmall = blockDimensions(
+                  rows
+                  , cols
+                  , block.small.w
+                  , block.small.h
+                )
                 block = blockDimensions(rows, cols, w - padding, h - padding)
                 var data = blocks().data(d3.range(rows * cols))
                 data.enter()
@@ -331,10 +412,22 @@
                 data.exit().remove()
                 var s = blocks().size()
                 blocks()
-                  .style(smallStyle(rows, cols, bsmall.small.w, bsmall.small.h, w, h))
+                  .style(smallStyle(
+                    rows
+                    , cols
+                    , bsmall.small.w
+                    , bsmall.small.h
+                    , w, h)
+                  )
                   .transition()
                   .duration(duration)
-                  .style(smallStyle(rows, cols, block.small.w, block.small.h, w, h))
+                  .style(smallStyle(
+                    rows
+                    , cols
+                    , block.small.w
+                    , block.small.h
+                    , w, h
+                  ))
                   .each('end', function(d, i){
                     if( i + 1 === s) animating = false
                     blocks().on('click', zoomIn)
@@ -356,6 +449,16 @@
           .attr('src', createCanvas(rows, cols, bw, bh).toDataURL() )
       }
       
+    </script>
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-39250901-2']);
+      _gaq.push(['_trackPageview']);
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
     </script>
   </body>
 </html>
