@@ -70,6 +70,11 @@
         text-align: center;
         margin: auto;
       }
+      .share {
+        position: absolute;
+        right: 0px;
+        bottom: 10px;
+      }
     </style>
   </head>
   <body>
@@ -80,6 +85,24 @@
       <h5> ( click on a block ) </h5>
     </div>
     <div class="legend"></div>
+    <div class="share">
+      <a href="https://twitter.com/share" class="twitter-share-button" data-via="vicapow">Tweet</a>
+      <script>
+        setTimeout(function(){
+          !function(d,s,id){
+            var js
+              , fjs = d.getElementsByTagName(s)[0]
+              , p = /^http:/.test(d.location) ? 'http' : 'https';
+            if(!d.getElementById(id)){
+              js = d.createElement(s);
+              js.id = id;
+              js.src = p + '://platform.twitter.com/widgets.js';
+              fjs.parentNode.insertBefore(js,fjs);
+            }
+          }(document, 'script', 'twitter-wjs');
+        })
+      </script>
+    </div>
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script>
       var w = window.innerWidth
