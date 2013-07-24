@@ -1,7 +1,7 @@
 ## [Simpsons Paradox Visualized in D3](/posts/simpsons-paradox.html)
 July 24, 2013
 
-> In probability and statistics, Simpson's paradox, or the Yule–Simpson effect, is a paradox in which a trend that appears in different groups of data disappears when these groups are combined, and the reverse trend appears for the aggregate data. This result is often encountered in social-science and medical-science statistics,[1] and is particularly confounding when frequency data are unduly given causal interpretations. -- [Wikipedia](https://en.wikipedia.org/wiki/Simpson's_paradox)
+> In probability and statistics, Simpson's paradox, or the Yule-Simpson effect, is a paradox in which a trend that appears in different groups of data disappears when these groups are combined, and the reverse trend appears for the aggregate data. This result is often encountered in social-science and medical-science statistics, and is particularly confounding when frequency data are unduly given causal interpretations. -- [Wikipedia](https://en.wikipedia.org/wiki/Simpson's_paradox)
 
 ### Simple Example
 <iframe class="matchmysize" height="500" src="/experiments/simpsons-paradox.html?%7B%22Lisa%22%3A%7B%22Week%201%22%3A%5B0%2C3%5D%2C%22Week%202%22%3A%5B5%2C7%5D%7D%2C%22Bart%22%3A%7B%22Week%201%22%3A%5B1%2C7%5D%2C%22Week%202%22%3A%5B3%2C3%5D%7D%7D"></iframe>
