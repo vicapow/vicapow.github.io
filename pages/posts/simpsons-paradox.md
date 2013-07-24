@@ -11,4 +11,6 @@ July 24, 2013
 
 Also checkout the [kidney stone treatment](/experiments/simpsons-paradox.html?%7B%22Treatment%20A%22%3A%7B%22Small%20Stones%22%3A%5B81%2C87%5D%2C%22Large%20Stones%22%3A%5B192%2C263%5D%7D%2C%22Treatment%20B%22%3A%7B%22Small%20Stones%22%3A%5B234%2C270%5D%2C%22Large%20Stones%22%3A%5B55%2C80%5D%7D%7D) example
 
+Feel free to try out the code yourself from [github](https://github.com/vicapow/simpsons-paradox).
+
 Note: all examples taken from the Wikipedia page on [Simpsons Paradox](https://en.wikipedia.org/wiki/Simpson's_paradox)
