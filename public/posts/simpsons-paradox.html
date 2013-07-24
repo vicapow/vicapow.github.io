@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> a blog by victor powell</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" href="/css/main.css?v1">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Sans:400,700">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+  </head>
+  <body>
+    <div class="container"><br><a href="/">back</a><div style="float:right">
+  <a href="https://twitter.com/vicapow" class="twitter-follow-button" data-show-count="false">Follow @vicapow</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+</div>
+      <div class="post-body">
+        <div class="container"><h2><a href="/posts/simpsons-paradox.html">Simpsons Paradox Visualized in D3</a></h2>
+<p>July 24, 2013</p>
+<blockquote>
+<p>In probability and statistics, Simpson&#39;s paradox, or the Yule–Simpson effect, is a paradox in which a trend that appears in different groups of data disappears when these groups are combined, and the reverse trend appears for the aggregate data. This result is often encountered in social-science and medical-science statistics,[1] and is particularly confounding when frequency data are unduly given causal interpretations. -- <a href="https://en.wikipedia.org/wiki/Simpson&#39;s_paradox">Wikipedia</a></p>
+</blockquote>
+<h3>Simple Example</h3>
+<iframe class="matchmysize" height="500" src="/experiments/simpsons-paradox.html?%7B%22Lisa%22%3A%7B%22Week%201%22%3A%5B0%2C3%5D%2C%22Week%202%22%3A%5B5%2C7%5D%7D%2C%22Bart%22%3A%7B%22Week%201%22%3A%5B1%2C7%5D%2C%22Week%202%22%3A%5B3%2C3%5D%7D%7D"></iframe>
+
+<h3>Batting Averages</h3>
+<iframe class="matchmysize" height="500" src="/experiments/simpsons-paradox.html?%7B%22Derek%20Jeter%22%3A%7B%221995%22%3A%5B12%2C48%5D%2C%221996%22%3A%5B183%2C582%5D%7D%2C%22David%20Justice%22%3A%7B%221995%22%3A%5B104%2C411%5D%2C%221996%22%3A%5B45%2C140%5D%7D%7D"></iframe>
+
+<p>Also checkout the <a href="/experiments/simpsons-paradox.html?%7B%22Treatment%20A%22%3A%7B%22Small%20Stones%22%3A%5B81%2C87%5D%2C%22Large%20Stones%22%3A%5B192%2C263%5D%7D%2C%22Treatment%20B%22%3A%7B%22Small%20Stones%22%3A%5B234%2C270%5D%2C%22Large%20Stones%22%3A%5B55%2C80%5D%7D%7D">kidney stone treatment</a> example</p>
+<p>Note: all examples taken from the Wikipedia page on <a href="https://en.wikipedia.org/wiki/Simpson&#39;s_paradox">Simpsons Paradox</a></p>
+
+        </div>
+        <div class="clear"></div>
+      </div><br>
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+        /* CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE */
+        var disqus_shortname = 'vicapow'; // required: replace example with your forum shortname
+        /* DON'T EDIT BELOW THIS LINE */
+        (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the comments</noscript><a href="/">back</a>
+    </div>
+    <!-- - apply code highlighting-->
+    <script src="/js/main.js?v1"></script><script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-39250901-2']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+  </body>
+</html>
