@@ -89,6 +89,7 @@
         , ident = function(d){ return d }
         , radiusScale = d3.scale.linear().range([0, max_area])
         , areaToRadius = function(area){ return Math.sqrt(area / Math.PI) }
+        , fisheye = d3.fisheye.circular().radius(30).distortion(2)
         , radius = function(d){ 
           var metric = sortMetric
           if(metric === 'Title') metric = 'TCOE'
@@ -101,7 +102,6 @@
             if(a[by] === b[by]) return 0; else if(a[by] > b[by]) return -1;
             return 1;
         }}, money = d3.format('$,04d')
-        , fisheye = d3.fisheye.circular().radius(50).distortion(5)
         , id = 0, order = 0
         , format = function(d){
             // Name,Title,Base,OT,Other,MDV,ER,EE,DC,Misc,TCOE,,Average,
@@ -139,7 +139,7 @@
         node.append('circle').attr('r', radius)
         node.call(randomize).call(updatePos).call(sortNodesByMetric.bind(null, 'TCOE'))
         node.on('click', function(){
-          var node = d3.select('.node.highlighted').classed('highlighted', false).node()
+          var node // = d3.select('.node.highlighted').classed('highlighted', false).node()
             , sel = d3.select(this)
           if(sel.node() !== node) sel.classed('highlighted', !d3.select(this).classed('highlighted'))
         })
