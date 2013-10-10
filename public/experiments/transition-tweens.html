@@ -42,7 +42,7 @@ g.selectAll('circle').data(function(type){
   }).enter().append('circle')
     .attr({r: r, cx: function(d){ return offset + d * width }, cy: r*2})
 svg.append('text').text('t=0').attr({x: offset, y: 30})
-svg.append('text').text('t=2000').attr({x: width + 80, y: 30})
+svg.append('text').text('t=3000').attr({x: width + 80, y: 30})
   svg.selectAll('.ball').data(types)
     .enter().append('circle').attr({ 'class': 'ball', 'r': r})
 setInterval(step, 3000)
