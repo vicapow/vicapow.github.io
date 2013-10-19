@@ -2,97 +2,67 @@
 <html>
   <head>
     <title>Salary of Every BART Employee</title>
-    <meta name="viewport" content="width=800, user-scalable=0">
+    <meta name="viewport" content="width=600">
     <script src="js/d3.js" charset="utf-8"></script>
     <script src="js/fisheye.js"></script>
     <script src="js/jquery.js"></script>
     <style>
+      * {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
       body{ margin: 0; font-family: helvetica; }
       button, select { outline: none;}
       .node { fill: black; }
-      #controls{ 
-        text-align: center;
-        font-size: 20px;
-        font-weight: bold;
-      }
-      #source{
-        position: absolute;
-        right: 10px;
-        bottom: 10px;
-      }
-      #title{
-        width: 100%;
-      }
-      .vis{
-        position: absolute;
-        left: 0px;
-        top: 0px;
-        z-index: -10;
-      }
-      #title h1{
-        text-align: center;
-        margin: 10px;
-      }
+      #controls{ text-align: center; font-size: 20px; font-weight: bold; }
+      #source{ position: absolute; right: 10px; bottom: 10px; }
+      #title{ width: 100%; }
+      #title h1{ text-align: center; margin: 10px; }
+      .vis{ position: absolute; left: 0px; top: 0px; z-index: -10; }
       circle { stroke: none; }
-      .node.active circle {
-        stroke-width: 1;
-        stroke: white;
-      }
-      .node.highlighted circle { 
+      .node.active circle { stroke-width: 1; stroke: white; }
+      .node.highlighted circle {
         stroke: black;
         stroke-width: 15;
         stroke-opacity: 0.5;
       }
       .tooltip{ display: none; }
       .tooltip .bg{ opacity: 0.7; }
-      .tooltip text{
-        fill: white;
-      }
-      active.tooltip{
-        display: inherit;
-      }
-      .node text{
-        text-anchor: middle;
-        fill: black;
-      }
+      .tooltip text{ fill: white; }
+      active.tooltip{ display: inherit; }
+      .node text{ text-anchor: middle; fill: black; }
       select{ font-size: 20px; }
-      .sort-by{
-/*        border: 1px solid #999;
-        background-color: green;
-        -webkit-appearance: none;
-        padding: 5px;
-        border-radius: 0px;*/
-      }
-      .share-left{ margin-top: 20px; position: absolute; left: 20px;}
-      .share-right{ margin-top: 20px; position: absolute; right: 10px;}
-      .fb-share-right{ margin-top: 50px; position: absolute; right: 35px;}
+      .share-left{ top: 20px; position: absolute; left: 20px;}
+      .share-right{ top: 20px; position: absolute; right: 10px;}
+      .fb-share-right{ top: 50px; position: absolute; right: 35px;}
       @media (max-width: 900px) {
-        h1, #controls{ 
-          float: left;
-          margin-left: 20px;
-        }
-        .share-left{
-          left: inherit;
-          right: 20px;
-          top: 60px;
-        }
+        h1, #controls{ float: left; margin-left: 20px; }
+        .share-left{ left: inherit; right: 40px; top: 80px; }
       }
-      @media(max-width: 400px){
-        .share-left, .share-right, .fb-share-right{
-          display: none;
+      @media(max-width: 686px){
+        .share-left, .share-right, .fb-share-right{ display: none; }
+        .share-right{
+          display: block;
+          position: static;
+          text-align: center;
         }
-        h1{
-          display: none;
-        }
+        svg.vis{ position: static; }
+        h1{ font-size: 18px; text-align: center; float: none;}
         #controls{
           font-size: 10px;
-          position: absolute;
-          top: inherit;
-          bottom: 5px;
+          position: static;
+          text-align: center;
+          width: 100%;
+          margin: 0;
         }
-        #controls select{ width: 100px;}
-        #source{
-          display: none;
+        #controls select{ width: 100%;}
+        #source{ display: block; position: static; margin: 10px;}
+        #controls div{
+          display: block;
         }
       }
     </style>
@@ -111,6 +81,7 @@
         <a href="https://twitter.com/vicapow" class="twitter-follow-button" data-show-count="false">Follow @vicapow</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
       </div>
+      <h1>Salary of Every BART Employee</h1>
       <div class="share-right">
         <a href="https://twitter.com/share" class="twitter-share-button" data-via="vicapow" data-hashtags="hackthebart">Tweet</a>
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
@@ -118,15 +89,15 @@
       <div class="fb-share-right">
         <div class="fb-like" data-href="http://blog.vctr.me/bart/" data-width="The pixel width of the plugin" data-height="The pixel height of the plugin" data-colorscheme="light" data-layout="button_count" data-action="recommend" data-show-faces="true" data-send="true"></div>
       </div>
-      <h1>Salary of Every BART Employee</h1>
     </div>
     <div id="controls">
-      <p>color by: 
+      <p>
+        <label> color by: </label>
         <select class="color">
           <option value="Union"> Union </option>
           <option value="Title"> Title </option>
         </select>
-        sort by: 
+        <label> sort by: </label>
         <select class="sort-by">
           <option value="TCOE">Total cost of employee</option>
           <option value="Base">Base pay</option>
@@ -143,19 +114,19 @@
         </select>
       </p>
     </div>
+    <svg class="vis"></svg>
     <div id="source"> 
       <a href="https://github.com/enjalot/bart#data-links">source data</a> | 
       <a href="https://github.com/vicapow/bart-employees-in-d3">and code</a> | 
       created by: <a href="http://vctr.me"> vicapow </a> see more at <a href="http://enjalot.github.io/bart/">enjalot.github.io/bart</a>
     </div>
-    <div id="fork">
-    </div>
     <script>
-      var width = window.innerWidth, height = window.innerHeight
-        , vis = d3.select('body').append('svg').attr('class', 'vis')
+      var width = window.innerWidth
+        , height = (width < 686 ) ? 527760 / width : window.innerHeight
+        , vis = d3.select('svg.vis')
           .style({ width: width + 'px', height: height + 'px' })
         , node, max, margin = 30, max_area = 300, tooltip
-        , margin_top = (width > 450) ? 120 : 20
+        , margin_top = (width > 686) ? 120 : 20
         , margin_bottom = 50, steps_x = 100, steps_y = 28
         , color = d3.scale.category20()
         , calcBestArea = function(){
@@ -163,8 +134,7 @@
             , r2 = (height / steps_y) / 1.4
             , r = r1 < r2 ? r1 : r2
           return Math.PI * r * r
-        }
-        , max_area = calcBestArea()
+        }, max_area = calcBestArea()
         , areaScale = d3.scale.linear().range([0, max_area])
         , areaToRadius = function(area){ return Math.sqrt(area / Math.PI) }
         , fisheye = d3.fisheye.circular().radius(30).distortion(2)
@@ -173,19 +143,32 @@
           var metric = sortMetric
           if(metric === 'Title' || metric === 'Union') metric = 'TCOE'
           return areaToRadius(areaScale(d[metric])) 
-        }
-        , x = d3.scale.linear().domain([0, steps_x]).range([margin, width - margin])
-        , y = d3.scale.linear().domain([0, steps_y]).range([margin_top, height - margin_bottom])
-        , dataKey = function(d){ return d.id }
+        }, x = d3.scale.linear().domain([0, steps_x])
+          .range([margin, width - margin])
+        , y = d3.scale.linear().domain([0, steps_y])
+          .range([margin_top, height - margin_bottom])
+        , maxRadius = function(){ return areaToRadius(areaScale.range()[1]) }
+        , updateSteps = function(){
+          if(width < 686){
+            steps_x = 20 // Math.ceil( width / areaToRadius(areaScale.range()[1]))
+            steps_y = Math.ceil(employees.length / steps_x)
+          }else{ 
+            steps_x = 100
+            steps_y = 28
+          }
+          x.domain([0, steps_x])
+          y.domain([0, steps_y])
+        }, dataKey = function(d){ return d.id }
         , sortBy = function(by){ return function(a, b){ 
             if(a[by] === b[by]) return 0; else if(a[by] > b[by]) return -1;
             return 1;
         }}, money = d3.format('$,04d')
-        , id = 0, order = 0
+        , id = 0, order = 0, employees = null
         , sortMetric = $('.sort-by').val()
         , format = function(d){
             // Name,Title,Base,OT,Other,MDV,ER,EE,DC,Misc,TCOE,,Average,
-            var numKeys = ['Base', 'OT', 'Other', 'MDV', 'ER', 'EE', 'DC', 'Misc', 'TCOE'];
+            var numKeys = ['Base', 'OT', 'Other', 'MDV', 'ER', 'EE', 'DC'
+              , 'Misc', 'TCOE'];
             numKeys.forEach(function(key){ d[key] = Number(d[key]) })
             d.id = id++
             d.order = order++
@@ -206,7 +189,16 @@
       function updateAreaScale(sortMetric){
         var metric = sortMetric
         if(metric === 'Title' || metric === 'Union') metric = 'TCOE'
-        areaScale.domain([0, d3.max(employees, function(d){ return d[metric] })])
+        areaScale
+          .domain([0, d3.max(employees, function(d){ return d[metric] })])
+      }
+      function is_touch_device() {  
+        try {  
+          document.createEvent("TouchEvent");  
+          return true;  
+        } catch (e) {  
+          return false;  
+        }  
       }
       function gotEmployees(employees){
         updateAreaScale(sortMetric)
@@ -215,22 +207,31 @@
             .attr('class', 'node')
             .call(updateColor)
         node.append('circle').attr('r', radius)
+        resize()
         node.call(randomize).call(updatePos).call(sortNodesByMetric.bind(null, sortMetric))
-        node.on('click', function(){
-          var node // = d3.select('.node.highlighted').classed('highlighted', false).node()
-            , sel = d3.select(this)
-          if(sel.node() !== node) sel.classed('highlighted', !d3.select(this).classed('highlighted'))
-        })
+        node.on('mouseup', onHighlight)
         vis.call(createTooltip)
+        function onHighlight(){
+          if(!is_touch_device()){
+            var node, sel = d3.select(this)
+            if(sel.node() !== node) sel.classed('highlighted', !d3.select(this)
+              .classed('highlighted'))
+          }
+        }
       }
       function createTooltip(vis){
         tooltip = vis.append('g').attr('class', 'tooltip')
-        tooltip.append('rect').attr({ width: 130, height: 140, rx: 5, ry: 5, class: 'bg' })
+        tooltip.append('rect').attr({ 
+          width: 130, height: 140, rx: 5, ry: 5, class: 'bg' })
         var desc = tooltip.append('g').attr('class', 'desc')
-        desc.append('text').attr('class', 'name').text('name: ').attr('transform', 'translate(5,15)')
-        desc.append('text').attr('class', 'title').text('title: ').attr('transform', 'translate(5,35)')
-        desc.append('text').attr('class','union').text('union: ').attr('transform', 'translate(5,55)')
-        desc.append('text').attr('class','main').text('total: ').attr('transform', 'translate(5,75)')
+        desc.append('text').attr('class', 'name').text('name: ')
+          .attr('transform', 'translate(5,15)')
+        desc.append('text').attr('class', 'title').text('title: ')
+          .attr('transform', 'translate(5,35)')
+        desc.append('text').attr('class','union').text('union: ')
+          .attr('transform', 'translate(5,55)')
+        desc.append('text').attr('class','main').text('total: ')
+          .attr('transform', 'translate(5,75)')
         return tooltip
       }
       function posTooltip(node){
@@ -241,7 +242,8 @@
           + ' Base: ' + money(d.Base)
         else if(sortMetric === 'Title' || sortMetric === 'Union') text = d.Title
         else text = sortMetric + ': ' + money(d[sortMetric])
-        if(text === d.Title || text === d.Union) text = 'Base: ' + money(d.Base) + ' OT: ' + money(d.OT)
+        if(text === d.Title || text === d.Union) 
+          text = 'Base: ' + money(d.Base) + ' OT: ' + money(d.OT)
         tooltip.select('.main').text(text)
         tooltip.select('.title').text(d.Title)
         tooltip.select('.name').text(d.Name)
@@ -339,24 +341,44 @@
         colorMetric = newMetric
         node.transition().duration(2000).call(updateColor)
       })
-      $(window).resize(function(){
+      $(window).resize(resize)
+      function resize(){
         width = window.innerWidth
         height = window.innerHeight
-        if(width < 450) margin_top = 20
-        else margin_top = 120
+        updateSteps()
+        var r2 = width / steps_x
+        if(width < 686) {
+          height = steps_y * r2
+          margin_bottom = 0
+          margin_top = 30
+        }else {
+          margin_top = 120
+          margin_bottom = 50
+        }
         vis.style({ width: width + 'px', height: height + 'px' })
         x.range([margin, width - margin])
         y.range([margin_top, height - margin_bottom])
         node.call(grid).call(updatePos)
         updateMaxArea()
         node.select('circle').attr('r', radius)
-      })
+      }
       function fisheyeEffect(vis){
         return vis.on('mouseover', function(d){
           if(!node) return
           d3.select('.tooltip').style('display', 'inherit')
           //node.each(function(d, i){  $(this).removeClass('animated') })
-        }).on("mousemove", function(d){
+        }).on("mousemove", onMove)
+        .on('touchmove', onMove)
+        .on('mouseleave', function(d){
+          d3.select('.tooltip').style('display', 'none')
+          node.each(function(d, i){ d.fisheye = {x: d.x, y: d.y, z: 1} })
+          .filter(function(d){ return d.fisheye.z !== d.fisheye.prev_z })
+          .call(setFisheyePos)
+        })
+        .on('touchend', onMove)
+      }
+      function onMove(d){
+          // d3.event.preventDefault()
           var m = d3.mouse(this)
           fisheye.focus(m)
           if(!node) return
@@ -371,17 +393,13 @@
           .call(function(node){
             var max, maxNode
             node.each(function(d){
-              if( !max || d.fisheye.z > max.fisheye.z) { max = d; maxNode = this }
+              if( !max || d.fisheye.z > max.fisheye.z) { 
+                max = d; maxNode = this 
+              }
             })
             if(topNode !== maxNode) updateTopNode(maxNode)
           })
-        }).on('mouseleave', function(d){
-          d3.select('.tooltip').style('display', 'none')
-          node.each(function(d, i){ d.fisheye = {x: d.x, y: d.y, z: 1} })
-          .filter(function(d){ return d.fisheye.z !== d.fisheye.prev_z })
-          .call(setFisheyePos)
-        })
-      }
+        }
       function updateMaxArea(){
         max_area = calcBestArea()
         areaScale.range([0, max_area])
@@ -399,9 +417,12 @@
   _gaq.push(['_setAccount', 'UA-39250901-2']);
   _gaq.push(['_trackPageview']);
   (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    var ga = document.createElement('script'); 
+    ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol 
+      ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; 
+    s.parentNode.insertBefore(ga, s);
   })();
 </script>
   </body>
