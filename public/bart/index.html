@@ -43,18 +43,15 @@
         h1, #controls{ float: left; margin-left: 20px; }
         .share-left{ left: inherit; right: 40px; top: 80px; }
       }
-      @media(max-width: 686px){
+      @media(max-width: 700px){
+        .share-left{
+          display: none;
+        }
+      }
+      @media(max-width: 600px){
         .share-left, .share-right, .fb-share-right{ display: none; }
-        .share-right{
-          display: block;
-          position: static;
-          text-align: center;
-        }
-        .fb-share-right{
-          display: block;
-          position: static;
-          text-align: center;
-        }
+        .share-right{ display: block; position: static; text-align: center; }
+        .fb-share-right{ display: block; position: static; text-align: center; }
         svg.vis{ position: static; }
         h1{ font-size: 18px; text-align: center; float: none;}
         #controls{
@@ -66,9 +63,7 @@
         }
         #controls select{ width: 100%;}
         #source{ display: block; position: static; margin: 10px;}
-        #controls div{
-          display: block;
-        }
+        #controls div{ display: block; }
       }
     </style>
   </head>
@@ -127,11 +122,12 @@
     </div>
     <script>
       var width = window.innerWidth
-        , height = (width < 686 ) ? 527760 / width : window.innerHeight
+        , maxFullWidth = 600
+        , height = (width < maxFullWidth ) ? 527760 / width : window.innerHeight
         , vis = d3.select('svg.vis')
           .style({ width: width + 'px', height: height + 'px' })
         , node, max, margin = 30, max_area = 300, tooltip
-        , margin_top = (width > 686) ? 120 : 20
+        , margin_top = (width > maxFullWidth) ? 120 : 20
         , margin_bottom = 50, steps_x = 100, steps_y = 28
         , color = d3.scale.category20()
         , calcBestArea = function(){
@@ -154,7 +150,7 @@
           .range([margin_top, height - margin_bottom])
         , maxRadius = function(){ return areaToRadius(areaScale.range()[1]) }
         , updateSteps = function(){
-          if(width < 686){
+          if(width < maxFullWidth){
             steps_x = 20 // Math.ceil( width / areaToRadius(areaScale.range()[1]))
             steps_y = Math.ceil(employees.length / steps_x)
           }else{ 
@@ -352,12 +348,12 @@
         height = window.innerHeight
         updateSteps()
         var r2 = width / steps_x
-        if(width < 686) {
+        if(width < maxFullWidth) {
           height = steps_y * r2
           margin_bottom = 0
           margin_top = 30
         }else {
-          margin_top = 120
+          margin_top = 130
           margin_bottom = 50
         }
         vis.style({ width: width + 'px', height: height + 'px' })
@@ -409,7 +405,6 @@
         max_area = calcBestArea()
         areaScale.range([0, max_area])
       }
-
       function updateTopNode(maxNode){
         if(topNode) topNode.classed('active', false)
         topNode = d3.select(maxNode).classed('active', true)
