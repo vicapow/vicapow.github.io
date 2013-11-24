@@ -16,40 +16,40 @@
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 </div>
       <div class="post-body">
-        <div class="container"><h2><a href="/posts/test-your-javascript-skillz.html">Test Your Javascript Skillz</a></h2>
+        <div class="container"><h2 id="-test-your-javascript-skillz-posts-test-your-javascript-skillz-html-"><a href="/posts/test-your-javascript-skillz.html">Test Your Javascript Skillz</a></h2>
 <p>May 25, 2013</p>
-<h3>Hoisting</h3>
-<h4>will it throw an error?</h4>
+<h3 id="hoisting">Hoisting</h3>
+<h4 id="will-it-throw-an-error-">will it throw an error?</h4>
 <pre><code class="lang-js">foo()
 function foo(){
   console.log(&#39;foo&#39;)
 }</code></pre>
-<h4>answer</h4>
+<h4 id="answer">answer</h4>
 <p>no</p>
 <hr>
 <pre><code class="lang-js">bar()
 var bar = function(){
   console.log(&#39;bar&#39;)
 }</code></pre>
-<h4>answer</h4>
+<h4 id="answer">answer</h4>
 <p>yes <code>TypeError: undefined is not a function</code></p>
 <hr>
 <pre><code class="lang-js">if(false){
   var konnichiwa = &#39;bonjour&#39;
 }
 console.log(konnichiwa)</code></pre>
-<h4>answer</h4>
+<h4 id="answer">answer</h4>
 <p>no</p>
 <hr>
 <pre><code class="lang-js">if(false){
   var hallo = &#39;privet&#39;
 }
 console.log(nihao)</code></pre>
-<h4>answer</h4>
+<h4 id="answer">answer</h4>
 <p>yes <code>ReferenceError: nihao is not defined</code></p>
 <hr>
-<h3>The Event Loop, Asynchronicity, And Closure Scope</h3>
-<h4>what is the entire output to the console after 100ms for the following code?</h4>
+<h3 id="the-event-loop-asynchronicity-and-closure-scope">The Event Loop, Asynchronicity, And Closure Scope</h3>
+<h4 id="what-is-the-entire-output-to-the-console-after-100ms-for-the-following-code-">what is the entire output to the console after 100ms for the following code?</h4>
 <pre><code class="lang-js">var array = []
 for(var i = 0; i &lt; 5; i++){
   setTimeout(function(){
@@ -61,25 +61,25 @@ console.log(&#39;array: &#39;, array)
 setTimeout(function(){
   console.log(&#39;array: &#39;, array)
 },  100)</code></pre>
-<h4>answer</h4>
+<h4 id="answer">answer</h4>
 <blockquote>
 <p>array: []</p>
 <p>array: [5,5,5,5,5]</p>
 </blockquote>
 <hr>
-<h4>what if we changed the <code>100</code> in the second <code>setTimeout</code> to <code>99</code> ?</h4>
-<h4>answer</h4>
+<h4 id="what-if-we-changed-the-100-in-the-second-settimeout-to-99-">what if we changed the <code>100</code> in the second <code>setTimeout</code> to <code>99</code> ?</h4>
+<h4 id="answer">answer</h4>
 <blockquote>
 <p>array: []</p>
 <p>array: []</p>
 </blockquote>
 <hr>
-<h4>how could we write the code above to produce the following output:</h4>
+<h4 id="how-could-we-write-the-code-above-to-produce-the-following-output-">how could we write the code above to produce the following output:</h4>
 <blockquote>
 <p>array: []</p>
 <p>array: [0,1,2,3,4]</p>
 </blockquote>
-<h4>answer</h4>
+<h4 id="answer">answer</h4>
 <pre><code class="lang-js">var array = []
 for(var i = 0; i &lt; 5; i++){
   (function(i){ // closure
@@ -94,7 +94,7 @@ setTimeout(function(){
   console.log(&#39;array: &#39;, array)
 },  100)</code></pre>
 <hr>
-<h4>what would be the output if we changed <code>i</code> to <code>i * 2</code> in the argument to the closure?</h4>
+<h4 id="what-would-be-the-output-if-we-changed-i-to-i-2-in-the-argument-to-the-closure-">what would be the output if we changed <code>i</code> to <code>i * 2</code> in the argument to the closure?</h4>
 <pre><code class="lang-js">var array = []
 for(var i = 0; i &lt; 5; i++){
   (function(i){
@@ -108,13 +108,13 @@ console.log(&#39;array: &#39;, array)
 setTimeout(function(){
   console.log(&#39;array: &#39;, array)
 },  100)</code></pre>
-<h4>answer</h4>
+<h4 id="answer">answer</h4>
 <blockquote>
 <p>array: []</p>
 <p>array: [0,2,4,6,8]</p>
 </blockquote>
 <hr>
-<h4>what is the output?</h4>
+<h4 id="what-is-the-output-">what is the output?</h4>
 <pre><code class="lang-js">function foo(baz){
   var hola = &#39;moshi moshi!&#39;
   baz()
@@ -125,13 +125,13 @@ function bar(){
 }
 
 foo(bar)</code></pre>
-<h4>answer</h4>
+<h4 id="answer">answer</h4>
 <blockquote>
 <p><code>ReferenceError: hola is not defined</code></p>
 </blockquote>
 <hr>
-<h3>Automatic Semicolon Insertion</h3>
-<h4>what is printed to the console?</h4>
+<h3 id="automatic-semicolon-insertion">Automatic Semicolon Insertion</h3>
+<h4 id="what-is-printed-to-the-console-">what is printed to the console?</h4>
 <pre><code class="lang-js">function foo(){
   return 
   {
@@ -139,7 +139,7 @@ foo(bar)</code></pre>
   }
 }
 console.log( typeof foo() === &#39;undefined&#39;)</code></pre>
-<h5>answer</h5>
+<h5 id="answer">answer</h5>
 <blockquote>
 <p>true</p>
 </blockquote>
@@ -150,13 +150,13 @@ console.log( typeof foo() === &#39;undefined&#39;)</code></pre>
 (function(){
   console.log(&#39;bar&#39;)
 })()</code></pre>
-<h5>answer</h5>
+<h5 id="answer">answer</h5>
 <blockquote>
 <p><code>TypeError: undefined is not a function</code></p>
 </blockquote>
 <hr>
-<h4>How would you fix the code above?</h4>
-<h5>answer</h5>
+<h4 id="how-would-you-fix-the-code-above-">How would you fix the code above?</h4>
+<h5 id="answer">answer</h5>
 <pre><code class="lang-js">var foo = function(){
   console.log(&#39;foo&#39;)
 }

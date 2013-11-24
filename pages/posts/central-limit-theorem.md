@@ -1,7 +1,7 @@
 ## [Central Limit Theorem Visualized in D3](/posts/central-limit-theorem.html)
 May 29, 2013
 
-<iframe class="matchmysize" src="/experiments/central-limit-theorem.html"></iframe>
+<iframe class="matchmysize" height="600" src="/experiments/central-limit-theorem.html"></iframe>
 
 > In probability theory, the central limit theorem (CLT) states that, given certain conditions, the mean of a sufficiently large number of independent random variables, each with a well-defined mean and well-defined variance, will be approximately normally distributed. 
 >

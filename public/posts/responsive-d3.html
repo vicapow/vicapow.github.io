@@ -15,22 +15,22 @@
   <a href="https://twitter.com/vicapow" class="twitter-follow-button" data-show-count="false">Follow @vicapow</a>
   <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 </div>
-      <div class="post-body"><h2><a href="/posts/responsive-d3.html">Responsive D3</a></h2>
+      <div class="post-body"><h2 id="-responsive-d3-posts-responsive-d3-html-"><a href="/posts/responsive-d3.html">Responsive D3</a></h2>
 <p>May 15, 2013</p>
 <iframe class="matchmysize" src="/experiments/responsive-d3.html"></iframe>
 
 <ul>
 <li><strong>note:</strong> Resize the page to see the effect</li>
 </ul>
-<h3>So what techniques make this possible?</h3>
-<h4>1. don&#39;t use svg!</h4>
+<h3 id="so-what-techniques-make-this-possible-">So what techniques make this possible?</h3>
+<h4 id="1-don-t-use-svg-">1. don&#39;t use svg!</h4>
 <p>  I know this seems to goes against idiomatic d3 but remember that d3 is</p>
 <blockquote>
 <p>...not a monolithic framework that seeks to provide every conceivable feature. Instead, D3 solves the crux of the problem: efficient manipulation of documents based on data. </p>
 </blockquote>
 <p>  And that&#39;s exactly what we&#39;re doing here except with non-svg DOM elements because of the lack of support for percentage based positioning of svg elements. (if you&#39;ve found a better technique, please let me know!) </p>
 <p>  <strong>update</strong>: After writing this blog post, I found an example that does achieve a similar effect with svg elements using the the <code>preserveAspectRatio=&quot;none&quot;</code> <code>&lt;svg&gt;</code> property in combination with <code>vector-effect: non-scaling-stroke</code> on <code>&lt;path&gt;</code> elements</p>
-<h4>2. use container divs</h4>
+<h4 id="2-use-container-divs">2. use container divs</h4>
 <p>  A common pattern that I often see is trying to center align relative to a percentage distance from a parent element. for these cases, you can use an extra wrapper or container div</p>
 <pre><code class="lang-css">.label-container{
   width: 1px;
@@ -44,7 +44,7 @@
   left: -50px; /* half of the width */
   text-align: center;
 }</code></pre>
-<h4>3. Use &#39;em&#39; not &#39;px&#39; !</h4>
+<h4 id="3-use-em-not-px-">3. Use &#39;em&#39; not &#39;px&#39; !</h4>
 <p>  This will allow text elements to resize automatically when the font-size of their parent element changes. Then, when the window resizes, you can update the font size of the parent element like so:</p>
 <pre><code class="lang-js">  window.onresize = function(){
     var graph = document.getElementsByClassName(&#39;graph&#39;)[0]
