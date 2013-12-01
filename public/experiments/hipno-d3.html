@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+    body{ margin: 0; }
+    circle { fill: orange; stroke: #333; }
+    path { fill: none; stroke: #333; stroke-width: 4; }
+    </style>
+  </head>
+  <body>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script>
+
+var w = window.innerWidth, h = window.innerHeight
+  , svg = d3.select('body').append('svg').attr({width: w, height: h})
+  , radial = d3.svg.line.radial()
+var rand = function(n){ return Math.random() * n }
+
+function data(n, max_r, rotations){
+  return d3.range(n).map(function(d){
+    var t = d / (n - 1)
+    return [ t * max_r, t * Math.PI * rotations * 2 ]
+  })
+}
+
+function addRot(){
+  var trans = 'translate(' + rand(w) + ',' + rand(h) + ')';
+  var dur = Math.round(rand(5000)) + 500
+  ;(function loop(line){
+    line.attr('transform', trans + ' rotate(0)')
+    .transition().duration(dur).ease('linear')
+    .attr('transform', trans + ' rotate(180)')
+    .transition().duration(dur).ease('linear')
+    .attr('transform', trans + ' rotate(359)')
+    .each('end', function(){ loop(d3.select(this)) });
+  }(svg.append('path').datum(data(rand(100),rand(300), rand(10)))
+    .attr('d', radial)))
+}
+
+d3.range(rand(100)).map(addRot)
+
+  </script>
+  <div style="bottom: 10px; right: 10px; position: absolute;">by <a href="http://vctr.me">vicapow</a> </div>
+  <a style="top: 10px; left: 10px; position: absolute" href="javascript:history.go(0)">regenerate</a>
+  </body>
+</html>
