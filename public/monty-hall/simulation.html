@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-        <style>
+      <link href='http://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
+      <style>
       body{
         font-family: 'Roboto', helvetica, sans-serif;
       }
       .door text, .bar text{
         stroke: none;
         text-anchor: middle;
-        alignment-baseline: middle;
       }
       .door line{
         stroke: white;
@@ -35,7 +35,7 @@
         margin: 0;
       }
       label, select {
-        font-size: 20px;
+        /*font-size: 20px;*/
       }
       .bar rect.bg{
         fill: white;
@@ -49,7 +49,6 @@
     </style>
   </head>
   <body>
-    <link href='http://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
     <label>strategy</label>
     <select class="strategy">
       <option value="stay">stay</option>
@@ -99,7 +98,7 @@
         , prizes // the prizes underneath
         , selected_door
         , strategy = 'stay'
-        , font_size = '40px'
+        , font_size = 40
         , padding = 50
         , wins = 0
         , loses = 0
@@ -129,7 +128,7 @@
           .enter().append('option').text(function(d){
             this.value = d + 3
             return d + 3
-          }).style('font-size', font_size)
+          })
 
       function restart(){
         wins = 0; loses = 0
@@ -149,7 +148,7 @@
       function create_doors(){
         data = game_data(n)
         spacing = w / n
-        font_size = spacing / 5 + 'px'
+        font_size = spacing / 5
         doors = svg.selectAll('g.door').data(data).enter()
           .append('g').attr({ 'class': 'door'
             , transform: function(d){
@@ -164,7 +163,7 @@
           , width: spacing
           , height: h
         })
-        prizes.append('text').style('font-size', font_size)
+        prizes.append('text').style('font-size', font_size + 'px')
         
         covers = doors.append('g').attr('class', 'cover')
         covers.append('rect').attr({ 
@@ -176,7 +175,8 @@
         
         covers.append('text')
           .text(function(d, i){ return d.number + 1 })
-          .style('font-size', font_size)
+          .attr('y', font_size/3)
+          .style('font-size', font_size + 'px')
 
         doors.append('line').attr({
             x1: -spacing / 2
@@ -312,7 +312,6 @@
       })
       var label = bar.append('text').text('0% wins (0 out of 0)')
         .style('text-anchor', 'start')
-        .style('alignment-baseline', 'center')
         .attr({x: 5, y: bar_height / 2 })
       var percent = d3.format('%')
 

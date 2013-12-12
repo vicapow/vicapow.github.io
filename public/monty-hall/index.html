@@ -5,9 +5,14 @@
       margin: auto;
       width: 900px;
       font-family: 'Roboto', helvetica, sans-serif;
+      -moz-osx-font-smoothing: grayscale;
+      font-weight: normal;
     }
     .header{
       text-align: center;
+    }
+    h4{
+      font-weight: normal;
     }
     .header h1{
       font-size: 50px;
@@ -64,6 +69,7 @@
     }
     .twitter-btn{
       float: right;
+      margin-right: -30px;
     }
     .icon-credit{
       float:right;
@@ -73,19 +79,19 @@
   </style>
   <body>
     <link href='http://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
-    <div class="twitter-btn">
-<a href="https://twitter.com/vicapow" class="twitter-follow-button" data-show-count="false">Follow @vicapow</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-      <a href="https://twitter.com/share" class="twitter-share-button" data-via="vicapow">Tweet</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-  </div>
     <script src="../../js/d3.js"></script>
     <script src="../../js/sticker.js"></script>
     <script src="../../js/jquery-1.10.2.js"></script>
     <script src="misc.js"></script>
     <div class="header">
       <h1>The Monty Hall Problem</h1>
-      <h4>A visual explanation by: <a href="http://vctr.me">Victor Powell</a></h4>
+    <div class="twitter-btn">
+<a href="https://twitter.com/vicapow" class="twitter-follow-button" data-show-count="false">Follow @vicapow</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+      <a href="https://twitter.com/share" class="twitter-share-button" data-via="vicapow">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    </div>
+      <h4 style="text-align:left">A visual explanation by: <a href="http://vctr.me">Victor Powell</a></h4>
     </div>
     <iframe class="game" src="game.html"></iframe>
     <p>

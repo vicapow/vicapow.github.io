@@ -8,7 +8,6 @@
       .door text, .bar text{
         stroke: none;
         text-anchor: middle;
-        alignment-baseline: middle;
       }
       .door line{
         stroke: white;
@@ -112,7 +111,7 @@ function update_door_pos(doors){
 function create_doors(){
   data = game_data(n)
   spacing = w / n
-  font_size = spacing / 5 + 'px'
+  font_size = spacing / 5
   doors = svg.selectAll('g.door').data(data).enter()
     .append('g').attr({'class': 'door'}).call(update_door_pos)
 
@@ -123,7 +122,7 @@ function create_doors(){
     , width: spacing
     , height: h
   }).classed('goat', function(d){ return d.content === 'goat' })
-  prizes.append('text').style('font-size', font_size)
+  prizes.append('text').style('font-size', font_size + 'px')
 
   prizes.each(function(d){
     var me = d3.select(this).append('g')
@@ -144,7 +143,8 @@ function create_doors(){
   
   covers.append('text')
     .text(function(d, i){ return d.number + 1 })
-    .style('font-size', font_size)
+    .style('font-size', font_size + 'px')
+    .attr('y', font_size/3)
 
   doors.append('line').attr({
       x1: -spacing / 2
