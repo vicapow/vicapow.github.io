@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    body{
+      margin: auto;
+      width: 900px;
+      font-family: 'Roboto', helvetica, sans-serif;
+    }
+    .header{
+      text-align: center;
+    }
+    .header h1{
+      font-size: 50px;
+    }
+    .header h4{
+      font-size: 20px;
+    }
+    iframe.simulation{
+      width: 100%;
+      height: 280px;
+      border: none;
+    }
+    iframe.game{
+      width: 100%;
+      height: 210px;
+      border: none;
+    }
+    table.states{
+      width: 100%;
+      text-align: center;
+      table-layout: fixed;
+      border-collapse: collapse;
+    }
+    table.states tr, table.states td{
+      padding: 10px;
+    }
+    table.states td:not(:last-child){
+
+    }
+    table .prize{
+      color: black;
+    }
+    table .door, table .prize.win, table .prize.lose{
+      border: 4px solid white;
+      box-sizing: border-box;
+      color: white;
+    }
+    table .door.closed{
+      cursor: pointer;
+      background-color: black;
+      color: white;
+    }
+    table .door.open.goat, table .prize.lose{
+      background-color: red;
+    }
+    table .door.open.car, table .prize.win{
+      background-color: green;
+    }
+    table .door.closed.selected{
+      box-shadow: inset 0px 0px 0px 6px rgba(255, 255, 255, 0.5);
+    }
+    .stickers {
+      display: none;
+    }
+    .twitter-btn{
+      float: right;
+    }
+    .icon-credit{
+      float:right;
+      font-size: 10px;
+      text-align: right;
+    }
+  </style>
+  <body>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
+    <div class="twitter-btn">
+<a href="https://twitter.com/vicapow" class="twitter-follow-button" data-show-count="false">Follow @vicapow</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+      <a href="https://twitter.com/share" class="twitter-share-button" data-via="vicapow">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </div>
+    <script src="../../js/d3.js"></script>
+    <script src="../../js/sticker.js"></script>
+    <script src="../../js/jquery-1.10.2.js"></script>
+    <script src="misc.js"></script>
+    <div class="header">
+      <h1>The Monty Hall Problem</h1>
+      <h4>A visual explanation by: <a href="http://vctr.me">Victor Powell</a></h4>
+    </div>
+    <iframe class="game" src="game.html"></iframe>
+    <p>
+      You're on a game show and given the option to pick among three doors. Behind one is something you want, say, a new car. Behind the other two, something you don't; perhaps a goat. The host knows which door has which item and after you make your pick, they then reveal a goat behind one of the two remaining doors. Do you stay with your first choice or do you switch? This is the Monty Hall problem.
+    </p>
+    <p>
+      The interesting part of the problem is how strongly our intuitive judgment fails us. Most would think the odds of winning by staying or switching would be the same. 50% either way. There's only two doors to pick from, after all.
+    </p>
+    <p>
+      But our intuitions deceive. If we stay, we'll still only win the car 1 out of 3 tries, the same odds we had before we were given the option to switch. If we switch, we'll win 2 out of 3 tries.
+    </p>
+    <div class="container-states"></div>
+    <p>
+      It may help to consider the reverse; that 2 out of 3 tries, our first pick will be a goat. If we do pick a goat as our first choice, there's only one other goat the host can reveal to us. The remaining door we have the option to switch to is the one with the car! So if we pick a goat (which happens 2/3 of the time) and have the option to switch, we'll always win the car.
+    </p>
+    <script>
+
+;(function(){ // scope
+  var table = d3.select('.container-states').append('table').classed('states', true)
+  function data(door){
+    var c1 = ['', 'If the car is behind door 1...', 'If the car is behind door 2...', 'If the car is behind door 3...', '']
+    var c2 = [1, 'car', 'goat', 'goat', '']
+    var c3 = [2, 'goat', 'car', 'goat', '']
+    var c4 = [3, 'goat', 'goat', 'car', '']
+    var c5 = ['...and we stay, we...'].concat(d3.range(3)
+      .map(function(d, i){ return i === door ? 'win': 'lose' }))
+      .concat(['...win only if the car is behind door ' + (door + 1) + '.'])
+    var c6 = ['...and we switch, we...'].concat(d3.range(3)
+      .map(function(d, i){ return i === door ? 'lose': 'win' }))
+      .concat(['...win if the car is behind door ' + d3.range(1,4).filter(function(d){ return d !== door + 1}).join(' or ') + '.'])
+    return d3.zip(c1, c2, c3, c4, c5, c6)
+  }
+  var tr = table.selectAll('tr').data(data(0))
+  var td = tr.enter().append('tr').selectAll('td').data(function(d){ return d })
+      .enter().append('td').on('mouseover', update)
+  
+  update(1) // pick door number 1
+
+  function update(d){
+    if(d !== 1 && d !== 2 && d !== 3) return
+    tr.data(data(d - 1))
+    tr.selectAll('td').data(function(d){ return d})
+    td.call(update)
+
+    td.text(function(d, i){ return d})
+      .classed('door', function(d, i){ return i > 0 && i < 4 })
+      .classed('prize', function(d, i){ return i > 3 })
+      .classed('closed', function(d, i){ return d >= 0 &&  d <= 3 && d !== '' })
+      .classed('open', function(d, i){ return d === 'goat' || d === 'car' || d === '' })
+      .classed('goat', function(d, i){ return d === 'goat' })
+      .classed('car', function(d, i){ return d === 'car' })
+      .classed('win', function(d, i){ return d === 'win' })
+      .classed('lose', function(d, i){ return d === 'lose' })
+    tr.selectAll('td.door').classed('selected', function(d_){ return d_ === d })
+  }
+})()
+    </script>
+    <iframe class="simulation" src="simulation.html"></iframe>
+    <p>
+      If you still don't believe me, here's a simulation of someone playing the game. You can control their strategy (stay or switch) and the time it takes to run through each game. You can also control the number of doors since the same logic applies to those variations of the game.  The effect is more obvious as the number of doors increases.
+    </p>
+    <br>
+    <br>
+    <br>
+    <div class="icon-credit">
+      <p>Car by Johan Victor Nilsson from The Noun Project</p>
+      <p>Goat by Anand Prahlad from The Noun Project</p>
+    </div>
+    <div id="disqus_thread">
+    <script>
+      /* CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE */
+      var disqus_shortname = 'vicapow'; // required: replace example with your forum shortname
+      /* DON'T EDIT BELOW THIS LINE */
+      (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+    </script>
+    <noscript> Please enable JavaScript to view the comments </noscript>
