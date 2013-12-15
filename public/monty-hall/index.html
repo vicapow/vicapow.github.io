@@ -36,8 +36,8 @@
       table-layout: fixed;
       border-collapse: collapse;
     }
-    table.states tr, table.states td{
-      padding: 10px;
+    table td, table tr{
+      padding: 15px;
     }
     table.states td:not(:last-child){
 
@@ -61,8 +61,17 @@
     table .door.open.car, table .prize.win{
       background-color: green;
     }
-    table .door.closed.selected{
+    table .door.closed.selected, table .door.can-reveal{
       box-shadow: inset 0px 0px 0px 6px rgba(255, 255, 255, 0.5);
+    }
+    table .door.can-reveal{
+      position: relative;
+    }
+    table .door.can-reveal:after{
+      content: '(revealable)';
+      opacity: 0.5;
+      display: block;
+      width: 100%;
     }
     .stickers {
       display: none;
@@ -98,14 +107,14 @@
       You're on a game show and given the option to pick among three doors. Behind one is something you want, say, a new car. Behind the other two, something you don't; perhaps a goat. The host knows which door has which item and after you make your pick, they then reveal a goat behind one of the two remaining doors. Do you stay with your first choice or do you switch? This is the Monty Hall problem.
     </p>
     <p>
-      The interesting part of the problem is how strongly our intuitive judgment fails us. Most would think the odds of winning by staying or switching would be the same. 50% either way. There's only two doors to pick from, after all.
+      Most would think the odds of winning by staying or switching would be the same. 50% either way. There's only two doors to pick from, after all.
     </p>
     <p>
-      But our intuitions deceive. If we stay, we'll still only win the car 1 out of 3 tries, the same odds we had before we were given the option to switch. If we switch, we'll win 2 out of 3 tries.
+      But, if you stay, you'll only win the car 33% of the time. The same odds you had before you were given the choice to switch. If you switch, you'll win 66% of the time.
     </p>
     <div class="container-states"></div>
     <p>
-      It may help to consider the reverse; that 2 out of 3 tries, our first pick will be a goat. If we do pick a goat as our first choice, there's only one other goat the host can reveal to us. The remaining door we have the option to switch to is the one with the car! So if we pick a goat (which happens 2/3 of the time) and have the option to switch, we'll always win the car.
+      It may help to consider the reverse; that 2/3 of the time, your first pick will be a goat. If you do pick a goat as our first choice, the host will have to reveal the second goat. The remaining door is the one with the car!
     </p>
     <script>
 
@@ -116,17 +125,15 @@
     var c2 = [1, 'car', 'goat', 'goat', '']
     var c3 = [2, 'goat', 'car', 'goat', '']
     var c4 = [3, 'goat', 'goat', 'car', '']
-    var c5 = ['...and we stay, we...'].concat(d3.range(3)
-      .map(function(d, i){ return i === door ? 'win': 'lose' }))
-      .concat(['...win only if the car is behind door ' + (door + 1) + '.'])
-    var c6 = ['...and we switch, we...'].concat(d3.range(3)
+    var c5 = ['if you switch you\'ll...'].concat(d3.range(3)
       .map(function(d, i){ return i === door ? 'lose': 'win' }))
       .concat(['...win if the car is behind door ' + d3.range(1,4).filter(function(d){ return d !== door + 1}).join(' or ') + '.'])
-    return d3.zip(c1, c2, c3, c4, c5, c6)
+    return d3.zip(c1, c2, c3, c4, c5)
   }
   var tr = table.selectAll('tr').data(data(0))
   var td = tr.enter().append('tr').selectAll('td').data(function(d){ return d })
       .enter().append('td').on('mouseover', update)
+
   
   update(1) // pick door number 1
 
@@ -146,6 +153,11 @@
       .classed('win', function(d, i){ return d === 'win' })
       .classed('lose', function(d, i){ return d === 'lose' })
     tr.selectAll('td.door').classed('selected', function(d_){ return d_ === d })
+
+    tr.selectAll('td.door.goat, td.door.car').classed('can-reveal', function(d_, i){
+      return i + 1 !== d && d_ !== 'car'
+    })
+
   }
 })()
     </script>

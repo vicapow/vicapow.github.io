@@ -46,6 +46,9 @@
       .stickers {
         display: none;
       }
+      svg rect{
+        shape-rendering: crispEdges;
+      }
     </style>
   </head>
   <body>
@@ -312,7 +315,7 @@
       })
       var label = bar.append('text').text('0% wins (0 out of 0)')
         .style('text-anchor', 'start')
-        .attr({x: 5, y: bar_height / 2 })
+        .attr({x: 5, y: bar_height / 2 + 3 })
       var percent = d3.format('%')
 
       function update_bar(){

@@ -173,8 +173,10 @@ function play(){
     var inc = 1 + Math.floor(rand(2))
     sel.each(function(d){ d.number = (d.number + inc) % 3 })
   }
-  var shuffle_dur = 100
+  var shuffle_dur = 200
   var cover_dur = 1000
+
+  shade.transition().style('opacity', '0.0').style('pointer-events','none')
   covers.transition().duration(cover_dur).delay(stager)
     .attr({ transform: translate(0, - spacing)})
     .call(end_all(function(){
@@ -206,9 +208,8 @@ btn.append('circle').attr({r: 50})
 btn.append('path').attr('d', d3.svg.symbol().type('triangle-up'))
   .attr('transform', 'rotate(90) scale(4) translate(0,-1)')
   .style('fill', 'white')
-btn.on('click', function(){
-  shade.transition().style('opacity', '0.0').style('pointer-events','none')
-  play()
-})
+btn.on('click', play)
+
+setTimeout(play, 1000)
 
     </script>
