@@ -30,6 +30,12 @@
       height: 210px;
       border: none;
     }
+    iframe.states{
+      width: 100%;
+      height: 350px;
+      border: none;
+      overflow-y: hidden;
+    }
     table.states{
       width: 100%;
       text-align: center;
@@ -102,7 +108,7 @@
     </div>
       <h4 style="text-align:left">A visual explanation by: <a href="http://vctr.me">Victor Powell</a></h4>
     </div>
-    <iframe class="game" src="game.html"></iframe>
+    <iframe class="game" src="game.html" scrolling="no"></iframe>
     <p>
       You're on a game show and given the option to pick among three doors. Behind one is something you want, say, a new car. Behind the other two, something you don't; perhaps a goat. The host knows which door has which item and after you make your pick, they then reveal a goat behind one of the two remaining doors. Do you stay with your first choice or do you switch? This is the Monty Hall problem.
     </p>
@@ -116,55 +122,13 @@
     <p>
       It may help to consider the reverse; that 2/3 of the time, your first pick will be a goat. If you do pick a goat as our first choice, the host will have to reveal the second goat. The remaining door is the one with the car!
     </p>
-    <script>
-
-;(function(){ // scope
-  var table = d3.select('.container-states').append('table').classed('states', true)
-  function data(door){
-    var c1 = ['', 'If the car is behind door 1...', 'If the car is behind door 2...', 'If the car is behind door 3...', '']
-    var c2 = [1, 'car', 'goat', 'goat', '']
-    var c3 = [2, 'goat', 'car', 'goat', '']
-    var c4 = [3, 'goat', 'goat', 'car', '']
-    var c5 = ['if you switch you\'ll...'].concat(d3.range(3)
-      .map(function(d, i){ return i === door ? 'lose': 'win' }))
-      .concat(['...win if the car is behind door ' + d3.range(1,4).filter(function(d){ return d !== door + 1}).join(' or ') + '.'])
-    return d3.zip(c1, c2, c3, c4, c5)
-  }
-  var tr = table.selectAll('tr').data(data(0))
-  var td = tr.enter().append('tr').selectAll('td').data(function(d){ return d })
-      .enter().append('td').on('mouseover', update)
-
-  
-  update(1) // pick door number 1
-
-  function update(d){
-    if(d !== 1 && d !== 2 && d !== 3) return
-    tr.data(data(d - 1))
-    tr.selectAll('td').data(function(d){ return d})
-    td.call(update)
-
-    td.text(function(d, i){ return d})
-      .classed('door', function(d, i){ return i > 0 && i < 4 })
-      .classed('prize', function(d, i){ return i > 3 })
-      .classed('closed', function(d, i){ return d >= 0 &&  d <= 3 && d !== '' })
-      .classed('open', function(d, i){ return d === 'goat' || d === 'car' || d === '' })
-      .classed('goat', function(d, i){ return d === 'goat' })
-      .classed('car', function(d, i){ return d === 'car' })
-      .classed('win', function(d, i){ return d === 'win' })
-      .classed('lose', function(d, i){ return d === 'lose' })
-    tr.selectAll('td.door').classed('selected', function(d_){ return d_ === d })
-
-    tr.selectAll('td.door.goat, td.door.car').classed('can-reveal', function(d_, i){
-      return i + 1 !== d && d_ !== 'car'
-    })
-
-  }
-})()
-    </script>
-    <iframe class="simulation" src="simulation.html"></iframe>
+    <iframe class="states" src="states.html" scrolling="no"></iframe>
+    <br>
+    <br>
     <p>
       If you still don't believe me, here's a simulation of someone playing the game. You can control their strategy (stay or switch) and the time it takes to run through each game. You can also control the number of doors since the same logic applies to those variations of the game.  The effect is more obvious as the number of doors increases.
     </p>
+    <iframe class="simulation" src="simulation.html" scrolling="no"></iframe>
     <br>
     <br>
     <br>
