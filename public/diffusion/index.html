@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  <body>
+    <div class="social">
+    <a href="https://twitter.com/share" class="twitter-share-button" data-via="vicapow">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+<a href="https://twitter.com/vicapow" class="twitter-follow-button" data-show-count="false">Follow @vicapow</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    </div>
+    <script src="d3.js"></script>
+    <script src="geo.js"></script>
+    <script src="common.js"></script>
+    <script>
+
+var canvas = d3.select('body').append('canvas').attr({width: w, height: h})
+  , svg = d3.select('body').append('svg').attr({width: w, height: h})
+  , ctx = canvas.node().getContext('2d')
+  , num_diffuse = 0
+  , ray_lives = 100
+  , init_surface_scale = 0.5
+  , surface_n = 200
+
+
+// the geometry
+
+var surfaces = []
+var surface_scale = (function surface(){
+  var p1 = [w * 0.8, h * 0.1], p2 = [w * 0.8, h * 0.9]
+    , n = surface_n // where `n` is the number of segments
+    , m = 10 // `randomness` of points, applied perpendicular to `p1` and `p2`
+    // `n+1` is the number of points
+    , surface = points_line_diffuse(p1, p2, w * 0.5, n + 1, m)
+  // scale a point, p1, about a point, p2, with scale magnitude `s`
+  function scale_about(p1, p2, s){
+    return add(scale(minus(p2, p1), s), p2)
+  }
+  // flatten the center segments. makes max zoom more instructive
+  surface[n/2 - 1][0][0] = p1[0]
+  surface[n/2 - 1][1][0] = p1[0]
+  surface[n/2    ][0][0] = p1[0]
+  surface[n/2    ][1][0] = p1[0]
+  return function surface_scale(t){
+    // r => target number of visible segments
+    var r = Math.round(n * t); if((r % 2)) r = r - 1; if(r < 2) r = 2
+
+    var start = n / 2 - r/2, end = start + r
+      , sub_surface = surface.slice(start, end)
+      , scale = surface.length / sub_surface.length
+    surfaces = [{
+      geometry: sub_surface.map(function(p){
+        var p1 = p[0], p2 = p[1]
+          , center = midpoint(surface[n/2 - 1][1], surface[n/2][0])
+        p1 = scale_about(p1, center, scale)
+        p2 = scale_about(p2, center, scale)
+        return [ p1, p2]
+      })
+      // geometry: surface
+      , material: { diffusion: 0, reflection: 1 }
+    }]
+  }
+})()
+
+surface_scale(init_surface_scale) 
+
+// add the light source(s)
+
+var sources = d3.range(3).map(function(d){
+  return { 
+    rays: 100 // number of rays the ligh source will emit
+    , rotation: pi * 0
+    , spray: pi * 0.1
+    , position: [ w * 0.25, h * 0.5]
+    // , color: 'rgba(255,255,255,0.3)'
+    , color: color(d + 1)
+  }
+})
+
+svg.selectAll('g.handle').data(sources).enter().append('g')
+  .attr('class', 'handle').call(transform).call(function(){
+    this.each(function(){ setup_handle(d3.select(this)) })
+  })
+
+
+var slider_n = svg.append('g').datum({ 
+   min: 0, max: 1, length: 100, value: init_surface_scale, cb: surface_scale 
+}).call(slider).call(translate([w * 0.9, h * 0.5]))
+
+
+setup_tracer(ctx)
+
+    </script>
+  </body>
+</html>
