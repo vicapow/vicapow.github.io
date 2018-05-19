@@ -9,6 +9,6 @@ A while ago I was asked the question "what do you want?" it took me back. It was
 
 * I want to make things people not only use, but fall in love with.
 
-* I want there to be a direct correlation between the quality of work my and how much money I make.
+* I want there to be a direct correlation between the quality of my work and how much money I make.
 
 glad to see my opinions haven't changed :)
